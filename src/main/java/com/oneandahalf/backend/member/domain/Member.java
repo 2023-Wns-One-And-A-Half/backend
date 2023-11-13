@@ -3,7 +3,7 @@ package com.oneandahalf.backend.member.domain;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.oneandahalf.backend.common.domain.CommonDomainModel;
-import com.oneandahalf.backend.member.exeception.MissMatchPasswordException;
+import com.oneandahalf.backend.member.exception.MissMatchPasswordException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

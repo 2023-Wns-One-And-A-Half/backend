@@ -2,7 +2,7 @@ package com.oneandahalf.backend.member.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import com.oneandahalf.backend.member.exeception.BadPasswordException;
+import com.oneandahalf.backend.member.exception.BadPasswordException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;

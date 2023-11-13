@@ -1,6 +1,6 @@
 package com.oneandahalf.backend.member.domain;
 
-import com.oneandahalf.backend.member.exeception.DuplicateUsernameException;
+import com.oneandahalf.backend.member.exception.DuplicateUsernameException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
