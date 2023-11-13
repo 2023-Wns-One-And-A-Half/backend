@@ -1,5 +1,7 @@
 package com.oneandahalf.backend.member.presentation;
 
+import static com.oneandahalf.backend.member.presentation.support.AuthConstant.SESSION_ATTRIBUTE_MEMBER_ID;
+
 import com.oneandahalf.backend.member.application.MemberService;
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
@@ -38,7 +40,7 @@ public class MemberController {
     ) {
         Long memberId = memberService.login(loginRequest.toCommand());
         HttpSession session = request.getSession(true);
-        session.setAttribute("MEMBER_ID", memberId);
+        session.setAttribute(SESSION_ATTRIBUTE_MEMBER_ID, memberId);
         return ResponseEntity.ok().build();
     }
 }
