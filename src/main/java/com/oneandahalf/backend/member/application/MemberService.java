@@ -1,5 +1,6 @@
 package com.oneandahalf.backend.member.application;
 
+import com.oneandahalf.backend.member.application.command.LoginCommand;
 import com.oneandahalf.backend.member.application.command.SignupCommand;
 import com.oneandahalf.backend.member.domain.Member;
 import com.oneandahalf.backend.member.domain.MemberRepository;
@@ -21,5 +22,11 @@ public class MemberService {
         member.signup(memberValidator);
         return memberRepository.save(member)
                 .getId();
+    }
+
+    public Long login(LoginCommand command) {
+        Member member = memberRepository.getByUsername(command.username());
+        member.login(command.password());
+        return member.getId();
     }
 }

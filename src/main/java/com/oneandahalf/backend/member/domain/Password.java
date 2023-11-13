@@ -2,7 +2,7 @@ package com.oneandahalf.backend.member.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import com.oneandahalf.backend.member.exeception.BadPasswordException;
+import com.oneandahalf.backend.member.exception.BadPasswordException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
@@ -42,5 +42,9 @@ public class Password {
     @Override
     public int hashCode() {
         return Objects.hash(getValue());
+    }
+
+    public boolean match(String value) {
+        return this.value.equals(value);
     }
 }

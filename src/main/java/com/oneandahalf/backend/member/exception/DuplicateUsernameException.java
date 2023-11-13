@@ -1,4 +1,4 @@
-package com.oneandahalf.backend.member.exeception;
+package com.oneandahalf.backend.member.exception;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 

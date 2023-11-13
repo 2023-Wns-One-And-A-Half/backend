@@ -3,7 +3,7 @@ package com.oneandahalf.backend.member.domain;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.oneandahalf.backend.member.exeception.BadUsernameException;
+import com.oneandahalf.backend.member.exception.BadUsernameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
