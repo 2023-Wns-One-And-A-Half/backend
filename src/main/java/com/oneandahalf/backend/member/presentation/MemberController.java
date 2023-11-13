@@ -1,7 +1,10 @@
 package com.oneandahalf.backend.member.presentation;
 
 import com.oneandahalf.backend.member.application.MemberService;
+import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +29,16 @@ public class MemberController {
         return ResponseEntity
                 .created(URI.create("/members/" + memberId))
                 .build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody LoginRequest loginRequest,
+            HttpServletRequest request
+    ) {
+        Long memberId = memberService.login(loginRequest.toCommand());
+        HttpSession session = request.getSession(true);
+        session.setAttribute("MEMBER_ID", memberId);
+        return ResponseEntity.ok().build();
     }
 }

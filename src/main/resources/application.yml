@@ -10,6 +10,16 @@ spring:
     hibernate:
       ddl-auto: create
 
+server:
+  servlet:
+    session:
+      cookie:
+        path: /
+        max-age: 2592000
+        http-only: true
+        same-site: none
+        secure: true
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: TRACE
