@@ -2,9 +2,11 @@ package com.oneandahalf.backend.common.presentation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
+import lombok.Builder;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.PathMatcher;
 
+@Builder
 public record UriAndMethodCondition(
         Set<String> uriPatterns,
         Set<HttpMethod> httpMethods
