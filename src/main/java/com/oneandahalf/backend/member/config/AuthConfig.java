@@ -25,6 +25,9 @@ public class AuthConfig implements WebMvcConfigurer {
         registry.addInterceptor(optionalAuthInterceptor)
                 .addPathPatterns("/**")
                 .order(0);
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/members/my")
+                .order(1);
     }
 
     @Override

@@ -27,8 +27,13 @@ public final class AcceptanceSteps {
     }
 
     public static RequestSpecification given() {
+        return given(null);
+    }
+
+    public static RequestSpecification given(String 세션) {
         return RestAssured
                 .given().log().all()
+                .cookie("JSESSIONID", 세션)
                 .contentType(JSON);
     }
 

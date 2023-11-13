@@ -7,15 +7,18 @@ import static com.oneandahalf.backend.acceptance.AcceptanceSteps.예외_메세�
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.응답_상태를_검증한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.인증되지_않음;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.잘못된_요청;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.정상_처리;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.중복됨;
+import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.내_정보_조회_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_요청;
+import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.회원가입_요청;
+import static com.oneandahalf.backend.member.domain.ActivityArea.SEOUL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.web.server.Cookie.SameSite.NONE;
 
 import com.oneandahalf.backend.acceptance.AcceptanceTest;
-import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.query.response.MemberProfileResponse;
 import io.restassured.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -37,7 +40,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("mallang1234")
                     .password("mallang12345!@#")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -56,7 +59,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("mallang1234")
                     .password("mallang12345!@#")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -76,7 +79,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("1234567")
                     .password("mallang12345!@#")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -95,7 +98,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("mallang1234")
                     .password("1234567")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -118,7 +121,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("mallang1234")
                     .password("mallang12345!@#")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -140,7 +143,7 @@ public class MemberAcceptanceTest {
             SignupRequest request = SignupRequest.builder()
                     .username("mallang1234")
                     .password("mallang12345!@#")
-                    .activityArea(ActivityArea.SEOUL)
+                    .activityArea(SEOUL)
                     .nickname("mallang")
                     .profileImageName("mallangImage")
                     .build();
@@ -151,6 +154,48 @@ public class MemberAcceptanceTest {
 
             // then
             응답_상태를_검증한다(응답, 인증되지_않음);
+        }
+    }
+
+    @Nested
+    class 내_정보_조회_API extends AcceptanceTest {
+
+        @Test
+        void 인증되지_않았다면_오류() {
+            // when
+            var 응답 = 내_정보_조회_요청(null);
+
+            // then
+            응답_상태를_검증한다(응답, 인증되지_않음);
+        }
+
+        @Test
+        void 인증되었다면_내정보를_조회한다() {
+            // given
+            SignupRequest request = SignupRequest.builder()
+                    .username("mallang1234")
+                    .password("mallang12345!@#")
+                    .nickname("mallang")
+                    .activityArea(SEOUL)
+                    .profileImageName("mallangImage")
+                    .build();
+            var 회원_ID = ID를_추출한다(회원가입_요청(request));
+            var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+
+            // when
+            var 응답 = 내_정보_조회_요청(세션);
+
+            // then
+            응답_상태를_검증한다(응답, 정상_처리);
+            MemberProfileResponse 예상 = MemberProfileResponse.builder()
+                    .id(회원_ID)
+                    .nickname("mallang")
+                    .activityArea(SEOUL)
+                    .profileImageName("mallangImage")
+                    .build();
+            MemberProfileResponse memberProfileResponse = 응답.as(MemberProfileResponse.class);
+            assertThat(memberProfileResponse)
+                    .isEqualTo(예상);
         }
     }
 }
