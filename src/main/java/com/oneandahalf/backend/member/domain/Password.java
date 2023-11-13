@@ -43,4 +43,8 @@ public class Password {
     public int hashCode() {
         return Objects.hash(getValue());
     }
+
+    public boolean match(String value) {
+        return this.value.equals(value);
+    }
 }

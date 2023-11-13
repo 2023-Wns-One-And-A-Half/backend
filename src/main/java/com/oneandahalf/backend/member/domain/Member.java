@@ -3,6 +3,7 @@ package com.oneandahalf.backend.member.domain;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.oneandahalf.backend.common.domain.CommonDomainModel;
+import com.oneandahalf.backend.member.exeception.MissMatchPasswordException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -49,5 +50,12 @@ public class Member extends CommonDomainModel {
 
     public void signup(MemberValidator validator) {
         validator.validateDuplicateUsername(username);
+    }
+
+    public void login(String password) {
+        if (getPassword().match(password)) {
+            return;
+        }
+        throw new MissMatchPasswordException();
     }
 }

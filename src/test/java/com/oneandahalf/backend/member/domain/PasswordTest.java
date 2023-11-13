@@ -1,5 +1,6 @@
 package com.oneandahalf.backend.member.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -49,5 +50,15 @@ class PasswordTest {
         assertDoesNotThrow(() -> {
             new Password("12345678");
         });
+    }
+
+    @Test
+    void 일치여부를_판단한다() {
+        // given
+        Password password = new Password("12345678");
+
+        // when & then
+        assertThat(password.match("12345678")).isTrue();
+        assertThat(password.match("123456789")).isFalse();
     }
 }
