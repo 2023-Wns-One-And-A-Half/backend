@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -49,6 +48,16 @@ public class Product extends CommonDomainModel {
         this.seller = seller;
         this.productImageNames = productImageNames.stream()
                 .map(ProductImageName::new)
+                .toList();
+    }
+
+    public int getPrice() {
+        return price.getValue();
+    }
+
+    public List<String> getProductImageNames() {
+        return productImageNames.stream()
+                .map(ProductImageName::getName)
                 .toList();
     }
 }
