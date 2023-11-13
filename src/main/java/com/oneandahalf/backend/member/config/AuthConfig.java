@@ -27,6 +27,7 @@ public class AuthConfig implements WebMvcConfigurer {
                 .order(0);
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/members/my")
+                .addPathPatterns("/products")
                 .order(1);
     }
 
