@@ -5,12 +5,16 @@ import static com.oneandahalf.backend.member.presentation.support.AuthConstant.S
 import com.oneandahalf.backend.member.application.MemberService;
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.presentation.support.Auth;
+import com.oneandahalf.backend.member.query.MemberQueryService;
+import com.oneandahalf.backend.member.query.response.MemberProfileResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberQueryService memberQueryService;
 
     @PostMapping
     public ResponseEntity<Void> signup(
@@ -42,5 +47,12 @@ public class MemberController {
         HttpSession session = request.getSession(true);
         session.setAttribute(SESSION_ATTRIBUTE_MEMBER_ID, memberId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<MemberProfileResponse> findProfile(
+            @Auth Long memberId
+    ) {
+        return ResponseEntity.ok(memberQueryService.findProfile(memberId));
     }
 }
