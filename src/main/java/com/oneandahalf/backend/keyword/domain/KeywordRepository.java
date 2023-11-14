@@ -2,7 +2,10 @@ package com.oneandahalf.backend.keyword.domain;
 
 import com.oneandahalf.backend.common.exception.NotFoundEntityException;
 import com.oneandahalf.backend.member.domain.Member;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
@@ -15,4 +18,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     boolean existsByMemberAndContent(Member member, String content);
 
     void deleteByIdAndMemberId(Long id, Long memberId);
+
+    @Query("SELECT k FROM Keyword k WHERE :content LIKE CONCAT('%', k.content, '%')")
+    List<Keyword> findAllByContainsContent(@Param("content") String content);
 }
