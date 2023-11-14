@@ -25,4 +25,11 @@ public class InterestProductAcceptanceSteps {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 내_관심_상품_목록_조회_요청(String 세션) {
+        return given(세션)
+                .get("/interest-products/my")
+                .then().log().all()
+                .extract();
+    }
 }
