@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
-import com.oneandahalf.backend.trade.query.response.TradeSuggestionStatusResponse;
+import com.oneandahalf.backend.trade.query.response.TradeSuggestionExistResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -141,10 +141,10 @@ public class TradeSuggestionAcceptanceTest {
             var 응답 = 거래_제안_상태_조회_요청(말랑_세션, 상품1_ID);
 
             // then
-            assertThat(응답.as(TradeSuggestionStatusResponse.class))
+            assertThat(응답.as(TradeSuggestionExistResponse.class))
                     .usingRecursiveComparison()
                     .ignoringFields("suggestedDate")
-                    .isEqualTo(new TradeSuggestionStatusResponse(true, LocalDateTime.now()));
+                    .isEqualTo(new TradeSuggestionExistResponse(true, LocalDateTime.now()));
         }
 
         @Test
@@ -160,10 +160,10 @@ public class TradeSuggestionAcceptanceTest {
             var 응답 = 거래_제안_상태_조회_요청(말랑_세션, 상품1_ID);
 
             // then
-            assertThat(응답.as(TradeSuggestionStatusResponse.class))
+            assertThat(응답.as(TradeSuggestionExistResponse.class))
                     .usingRecursiveComparison()
                     .ignoringFields("suggestedDate")
-                    .isEqualTo(new TradeSuggestionStatusResponse(false, null));
+                    .isEqualTo(new TradeSuggestionExistResponse(false, null));
         }
     }
 }

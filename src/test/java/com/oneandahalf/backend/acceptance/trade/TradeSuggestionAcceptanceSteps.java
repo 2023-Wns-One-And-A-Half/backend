@@ -20,10 +20,9 @@ public class TradeSuggestionAcceptanceSteps {
     public static ExtractableResponse<Response> 거래_제안_상태_조회_요청(String 말랑_세션, Long 상품1_ID) {
         return given(말랑_세션)
                 .queryParam("productId", 상품1_ID)
-                .get("/trade-suggests")
+                .get("/trade-suggests/exist")
                 .then()
                 .log().all()
                 .extract();
-
     }
 }
