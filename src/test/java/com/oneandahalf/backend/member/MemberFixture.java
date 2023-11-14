@@ -1,4 +1,7 @@
-package com.oneandahalf.backend.member.domain;
+package com.oneandahalf.backend.member;
+
+import com.oneandahalf.backend.member.domain.ActivityArea;
+import com.oneandahalf.backend.member.domain.Member;
 
 public class MemberFixture {
 

@@ -5,16 +5,21 @@ import com.oneandahalf.backend.member.domain.Member;
 import com.oneandahalf.backend.product.domain.Product;
 import java.util.List;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Getter
 @Builder
-public record ProductDetailResponse(
-        Long id,
-        String name,
-        String description,
-        int price,
-        List<String> productImageNames,
-        SellerInfoResponse sellerInfo
-) {
+public class ProductDetailResponse {
+
+    private Long id;
+    private String name;
+    private String description;
+    private int price;
+    private int interestedCount;
+    private boolean interested;
+    private List<String> productImageNames;
+    private SellerInfoResponse sellerInfo;
 
     public static ProductDetailResponse from(Product product) {
         return ProductDetailResponse.builder()
@@ -25,6 +30,14 @@ public record ProductDetailResponse(
                 .productImageNames(product.getProductImageNames())
                 .sellerInfo(SellerInfoResponse.from(product.getSeller()))
                 .build();
+    }
+
+    public void setInterestedCount(int interestedCount) {
+        this.interestedCount = interestedCount;
+    }
+
+    public void setInterested(boolean interested) {
+        this.interested = interested;
     }
 
     @Builder

@@ -18,8 +18,8 @@ public class ProductAcceptanceSteps {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_상세_조회_요청(Long 상품_ID) {
-        return given()
+    public static ExtractableResponse<Response> 상품_상세_조회_요청(String 세션, Long 상품_ID) {
+        return given(세션)
                 .get("/products/{id}", 상품_ID)
                 .then().log()
                 .all()

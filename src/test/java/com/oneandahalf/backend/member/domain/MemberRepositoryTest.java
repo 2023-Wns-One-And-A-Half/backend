@@ -1,6 +1,6 @@
 package com.oneandahalf.backend.member.domain;
 
-import static com.oneandahalf.backend.member.domain.MemberFixture.mallang;
+import static com.oneandahalf.backend.member.MemberFixture.mallang;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
