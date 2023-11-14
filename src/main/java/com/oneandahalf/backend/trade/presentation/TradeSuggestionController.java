@@ -44,10 +44,10 @@ public class TradeSuggestionController {
     }
 
     @GetMapping
-    public ResponseEntity<TradeSuggestionStatusResponse> findStatus(
+    public ResponseEntity<List<TradeSuggestionResponse>> findAllByProductId(
             @Auth Long memberId,
             @RequestParam("productId") Long productId
     ) {
-        return ResponseEntity.ok(tradeSuggestionQueryService.findStatus(memberId, productId));
+        return ResponseEntity.ok(tradeSuggestionQueryService.findAllByProductId(memberId, productId));
     }
 }

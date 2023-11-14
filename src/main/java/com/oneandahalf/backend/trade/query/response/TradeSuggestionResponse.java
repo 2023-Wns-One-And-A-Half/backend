@@ -1,5 +1,6 @@
 package com.oneandahalf.backend.trade.query.response;
 
+import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.member.domain.Member;
 import com.oneandahalf.backend.trade.domain.TradeSuggestion;
 import java.time.LocalDateTime;
@@ -24,13 +25,15 @@ public record TradeSuggestionResponse(
     public record TradeSuggesterInfo(
             Long suggesterId,
             String nickName,
-            String profileImageName
+            String profileImageName,
+            ActivityArea activityArea
     ) {
         public static TradeSuggesterInfo from(Member suggester) {
             return TradeSuggesterInfo.builder()
                     .suggesterId(suggester.getId())
                     .nickName(suggester.getNickname())
                     .profileImageName(suggester.getProfileImageName())
+                    .activityArea(suggester.getActivityArea())
                     .build();
         }
     }
