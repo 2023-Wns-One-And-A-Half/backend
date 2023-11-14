@@ -5,7 +5,6 @@ import com.oneandahalf.backend.member.domain.Member;
 import com.oneandahalf.backend.product.domain.Product;
 import java.util.List;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
