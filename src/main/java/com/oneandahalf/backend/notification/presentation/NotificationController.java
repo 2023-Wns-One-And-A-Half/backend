@@ -27,7 +27,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationQueryService.findMine(memberId));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/read/{id}")
     public ResponseEntity<Void> read(
             @Auth Long memberId,
             @PathVariable("id") Long notificationId

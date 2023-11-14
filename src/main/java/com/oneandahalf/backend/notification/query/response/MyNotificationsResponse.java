@@ -21,6 +21,7 @@ public record MyNotificationsResponse(
 
     @Builder
     public record NotificationResponse(
+            Long id,
             String content,
             String linkedURI,
             boolean read,
@@ -28,6 +29,7 @@ public record MyNotificationsResponse(
     ) {
         public static NotificationResponse from(Notification notification) {
             return NotificationResponse.builder()
+                    .id(notification.getId())
                     .content(notification.getContent())
                     .linkedURI(notification.getLinkedURI())
                     .read(notification.isRead())
