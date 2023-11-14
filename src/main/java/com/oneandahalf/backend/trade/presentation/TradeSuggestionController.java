@@ -6,8 +6,8 @@ import com.oneandahalf.backend.trade.application.TradeSuggestionService;
 import com.oneandahalf.backend.trade.presentation.request.SuggestTradeRequest;
 import com.oneandahalf.backend.trade.query.TradeSuggestionQueryService;
 import com.oneandahalf.backend.trade.query.response.TradeSuggestionStatusResponse;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +25,12 @@ public class TradeSuggestionController {
     private final TradeSuggestionQueryService tradeSuggestionQueryService;
 
     @PostMapping
-    public ResponseEntity<Long> suggest(
+    public ResponseEntity<Void> suggest(
             @Auth Long memberId,
             @RequestBody SuggestTradeRequest request
     ) {
         Long suggestId = tradeSuggestionService.suggest(request.toCommand(memberId));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(suggestId);
+        return ResponseEntity.created(URI.create("/trade-suggests/" + suggestId)).build();
     }
 
     @GetMapping

@@ -12,8 +12,7 @@ public interface InterestProductRepository extends JpaRepository<InterestProduct
 
     default InterestProduct getByMemberIdAndProductId(Long memberId, Long productId) {
         return findByMemberIdAndProductId(memberId, productId)
-                .orElseThrow(() ->
-                new NotFoundEntityException("회원(id: %d)이 상품(id: %d)에 관심을 누르지 않았습니다."
+                .orElseThrow(() -> new NotFoundEntityException("회원(id: %d)이 상품(id: %d)에 관심을 누르지 않았습니다."
                         .formatted(memberId, productId)));
     }
 

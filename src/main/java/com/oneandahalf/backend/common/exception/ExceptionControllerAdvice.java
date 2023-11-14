@@ -20,7 +20,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorCode> handleException(ApplicationException e) {
         ErrorCode errorCode = e.getErrorCode();
-        log.info("잘못될 요청 들어옴", e);
+        log.info("잘못될 요청이 들어왔습니다. ", e);
         return ResponseEntity.status(errorCode.status())
                 .body(errorCode);
     }
@@ -31,14 +31,14 @@ public class ExceptionControllerAdvice {
         String fieldErrors = result.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(","));
-        log.error("요청 파라미터가 잘못되었습니다.", fieldErrors);
+        log.info("요청 파라미터가 잘못되었습니다. {}", fieldErrors);
         return ResponseEntity.badRequest()
                 .body(new ErrorCode(BAD_REQUEST, fieldErrors));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorCode> handleException(Exception e) {
-        log.error("예상치 못한 예외 발생: ", e);
+        log.error("예상치 못한 예외가 발생했습니다.  ", e);
         return ResponseEntity.internalServerError()
                 .body(INTERNAL_SERVER_ERROR_CODE);
     }

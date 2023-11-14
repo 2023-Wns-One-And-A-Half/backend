@@ -13,6 +13,8 @@ import static com.oneandahalf.backend.acceptance.product.InterestProductAcceptan
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_검색_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_등록_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_상세_조회_요청;
+import static com.oneandahalf.backend.acceptance.trade.TradeAcceptanceSteps.거래_확정_요청;
+import static com.oneandahalf.backend.acceptance.trade.TradeSuggestionAcceptanceSteps.거래_제안_요청;
 import static com.oneandahalf.backend.member.domain.ActivityArea.INCHEON;
 import static com.oneandahalf.backend.member.domain.ActivityArea.SEOUL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,18 +112,19 @@ public class ProductAcceptanceTest {
     @Nested
     class 상품_상세_조회_API extends AcceptanceTest {
 
+        private final RegisterProductRequest 상품1_정보 = RegisterProductRequest.builder()
+                .name("말랑이")
+                .description("말랑말랑 말랑이")
+                .price(10_000)
+                .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                .build();
+
         @Test
         void 상품을_상세정보를_조회한다() {
             // given
             var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
-            RegisterProductRequest request1 = RegisterProductRequest.builder()
-                    .name("말랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
-                    .build();
-            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, request1));
+            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
             관심_상품_등록_요청(세션, 상품_ID);
 
             // when
@@ -136,6 +139,7 @@ public class ProductAcceptanceTest {
                             .description("말랑말랑 말랑이")
                             .interestedCount(1)
                             .price(10_000)
+                            .traded(false)
                             .interested(false)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
@@ -152,13 +156,7 @@ public class ProductAcceptanceTest {
             // given
             var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
-            RegisterProductRequest request1 = RegisterProductRequest.builder()
-                    .name("말랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
-                    .build();
-            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, request1));
+            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
             관심_상품_등록_요청(세션, 상품_ID);
 
             // when
@@ -173,6 +171,7 @@ public class ProductAcceptanceTest {
                             .description("말랑말랑 말랑이")
                             .interestedCount(1)
                             .price(10_000)
+                            .traded(false)
                             .interested(true)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
@@ -183,31 +182,73 @@ public class ProductAcceptanceTest {
                                     .build()
                             ).build());
         }
+
+        @Test
+        void 거래를_확정된_상품_조회_시() {
+            // given
+            회원가입_요청(회원가입_정보);
+            var 동훈_ID = ID를_추출한다(회원가입_요청(SignupRequest.builder()
+                    .username("donghun1234")
+                    .password("donghun12345!@#")
+                    .nickname("donghun")
+                    .activityArea(SEOUL)
+                    .profileImageName("donghunImage")
+                    .build()));
+            var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+            var 동훈_세션 = 로그인_후_세션_추출("donghun1234", "donghun12345!@#");
+            var 상품_ID = ID를_추출한다(상품_등록_요청(동훈_세션, 상품1_정보));
+            var 거래_제안_ID = ID를_추출한다(거래_제안_요청(말랑_세션, 상품_ID));
+            거래_확정_요청(동훈_세션, 거래_제안_ID);
+
+            // when
+            var 응답 = 상품_상세_조회_요청(말랑_세션, 상품_ID);
+
+            // then
+            assertThat(응답.as(ProductDetailResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(ProductDetailResponse.builder()
+                            .id(상품_ID)
+                            .name("말랑이")
+                            .description("말랑말랑 말랑이")
+                            .interestedCount(0)
+                            .price(10_000)
+                            .interested(false)
+                            .traded(true)
+                            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                            .sellerInfo(SellerInfoResponse.builder()
+                                    .id(동훈_ID)
+                                    .nickname("donghun")
+                                    .activityArea(SEOUL)
+                                    .profileImageName("donghunImage")
+                                    .build()
+                            ).build());
+        }
     }
 
     @Nested
     class 상품_검색_API extends AcceptanceTest {
+
+        private final RegisterProductRequest 상품1_정보 = RegisterProductRequest.builder()
+                .name("말랑이")
+                .description("말랑말랑 말랑이")
+                .price(10_000)
+                .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                .build();
+        private final RegisterProductRequest 상품2_정보 = RegisterProductRequest.builder()
+                .name("몰랑이")
+                .description("말랑말랑 말랑이")
+                .price(20_000)
+                .productImageNames(List.of("몰랑이_사진1", "몰랑이_사진2"))
+                .build();
 
         @Test
         void 이름_포함조건으로_검색한다() {
             // given
             회원가입_요청(회원가입_정보);
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
-            RegisterProductRequest request1 = RegisterProductRequest.builder()
-                    .name("말랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
-                    .build();
-            RegisterProductRequest request2 = RegisterProductRequest.builder()
-                    .name("몰랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(20_000)
-                    .productImageNames(List.of("몰랑이_사진1", "몰랑이_사진2"))
-                    .build();
 
-            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, request1));
-            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, request2));
+            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
+            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품2_정보));
 
             // when
             var 응답 = 상품_검색_요청(null, null, null, "말랑");
@@ -225,21 +266,8 @@ public class ProductAcceptanceTest {
             // given
             회원가입_요청(회원가입_정보);
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
-            RegisterProductRequest request1 = RegisterProductRequest.builder()
-                    .name("말랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
-                    .build();
-            RegisterProductRequest request2 = RegisterProductRequest.builder()
-                    .name("몰랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(20_000)
-                    .productImageNames(List.of("몰랑이_사진1", "몰랑이_사진2"))
-                    .build();
-
-            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, request1));
-            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, request2));
+            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
+            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품2_정보));
 
             // when
             var 응답 = 상품_검색_요청(INCHEON, null, null, null);
@@ -255,21 +283,9 @@ public class ProductAcceptanceTest {
             // given
             회원가입_요청(회원가입_정보);
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
-            RegisterProductRequest request1 = RegisterProductRequest.builder()
-                    .name("말랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
-                    .build();
-            RegisterProductRequest request2 = RegisterProductRequest.builder()
-                    .name("몰랑이")
-                    .description("말랑말랑 말랑이")
-                    .price(20_000)
-                    .productImageNames(List.of("몰랑이_사진1", "몰랑이_사진2"))
-                    .build();
-
-            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, request1));
-            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, request2));
+            var 말랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보
+            ));
+            var 몰랑이_ID = ID를_추출한다(상품_등록_요청(세션, 상품2_정보));
 
             // when
             var 응답1 = 상품_검색_요청(SEOUL, 11_111, null, null);

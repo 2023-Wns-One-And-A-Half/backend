@@ -29,7 +29,13 @@ public class TradeSuggestion extends CommonDomainModel {
         this.product = product;
     }
 
-    public void suggest(TradeSuggestionValidator tradeSuggestionValidator) {
-        tradeSuggestionValidator.validateSuggest(suggester, product);
+    public void suggest(TradeValidator tradeValidator) {
+        tradeValidator.validateSuggest(suggester, product);
+    }
+
+    public Trade confirm(Member seller, TradeValidator tradeValidator) {
+        tradeValidator.validateTradeConfirm(product, seller);
+        product.confirmTrade();
+        return new Trade(suggester, product);
     }
 }
