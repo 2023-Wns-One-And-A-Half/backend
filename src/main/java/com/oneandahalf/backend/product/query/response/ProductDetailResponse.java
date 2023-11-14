@@ -16,6 +16,7 @@ public class ProductDetailResponse {
     private String description;
     private int price;
     private int interestedCount;
+    private int viewCount;
     private boolean interested;
     private boolean traded;
     private List<String> productImageNames;
@@ -27,6 +28,7 @@ public class ProductDetailResponse {
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
+                .viewCount(product.getViewCount())
                 .traded(product.isTraded())
                 .productImageNames(product.getProductImageNames())
                 .sellerInfo(SellerInfoResponse.from(product.getSeller()))
