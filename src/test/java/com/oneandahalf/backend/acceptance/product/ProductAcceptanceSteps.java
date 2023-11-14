@@ -18,6 +18,14 @@ public class ProductAcceptanceSteps {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 상품_상세_조회_요청(Long 상품_ID) {
+        return given()
+                .get("/products/{id}", 상품_ID)
+                .then().log()
+                .all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 상품_검색_요청(
             ActivityArea 지역,
             Integer 최소가격,

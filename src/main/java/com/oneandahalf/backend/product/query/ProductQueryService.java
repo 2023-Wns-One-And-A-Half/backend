@@ -1,11 +1,12 @@
 package com.oneandahalf.backend.product.query;
 
 import com.oneandahalf.backend.common.page.PageResponse;
+import com.oneandahalf.backend.product.query.dao.ProductDetailResponseDao;
 import com.oneandahalf.backend.product.query.dao.ProductSearchResponseDao;
 import com.oneandahalf.backend.product.query.dao.ProductSearchResponseDao.ProductSearchCond;
+import com.oneandahalf.backend.product.query.response.ProductDetailResponse;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductQueryService {
 
+    private final ProductDetailResponseDao productDetailResponseDao;
     private final ProductSearchResponseDao productSearchResponseDao;
+
+    public ProductDetailResponse find(Long id) {
+        return productDetailResponseDao.find(id);
+    }
 
     public PageResponse<ProductSearchResponse> search(ProductSearchCond cond, Pageable pageable) {
         return PageResponse.from(productSearchResponseDao.search(cond, pageable));

@@ -46,7 +46,7 @@ public class AuthConfig implements WebMvcConfigurer {
                         .httpMethods(Set.of(POST))
                         .build(),
                 UriAndMethodCondition.builder()
-                        .uriPatterns(Set.of("/products"))
+                        .uriPatterns(Set.of("/products/**"))
                         .httpMethods(Set.of(GET))
                         .build()
         );
