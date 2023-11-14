@@ -9,6 +9,7 @@ import static com.oneandahalf.backend.acceptance.AcceptanceSteps.인증되지_�
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.잘못된_요청;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.정상_처리;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.중복됨;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.찾을수_없음;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.내_정보_조회_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
@@ -138,6 +139,26 @@ public class MemberAcceptanceTest {
         }
 
         @Test
+        void 아이디가_없으면_로그인_실패() {
+            // given
+            SignupRequest request = SignupRequest.builder()
+                    .username("mallang1234")
+                    .password("mallang12345!@#")
+                    .activityArea(SEOUL)
+                    .nickname("mallang")
+                    .profileImageName("mallangImage")
+                    .build();
+            회원가입_요청(request);
+
+            // when
+            var 응답 = 로그인_요청("123123213321", "mallang1234");
+
+            // then
+            응답_상태를_검증한다(응답, 찾을수_없음);
+            예외_메세지를_검증한다(응답, "아이디가 123123213321 회원이 존재하지 않습니다.");
+        }
+
+        @Test
         void 비밀번호가_다르면_로그인_실패() {
             // given
             SignupRequest request = SignupRequest.builder()
@@ -154,6 +175,7 @@ public class MemberAcceptanceTest {
 
             // then
             응답_상태를_검증한다(응답, 인증되지_않음);
+            예외_메세지를_검증한다(응답, "비밀번호가 일치하지 않습니다.");
         }
     }
 
