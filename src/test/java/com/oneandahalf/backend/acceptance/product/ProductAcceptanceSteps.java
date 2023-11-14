@@ -6,6 +6,7 @@ import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductAcceptanceSteps {
@@ -19,7 +20,15 @@ public class ProductAcceptanceSteps {
     }
 
     public static ExtractableResponse<Response> 상품_상세_조회_요청(String 세션, Long 상품_ID) {
-        return given(세션)
+        return 상품_상세_조회_요청(세션, 상품_ID, null);
+    }
+
+    public static ExtractableResponse<Response> 상품_상세_조회_요청(String 세션, Long 상품_ID, String 조회수_세션_쿠키) {
+        RequestSpecification given = given(세션);
+        if (조회수_세션_쿠키 != null) {
+            given = given.cookie("VIEW_SESSION", 조회수_세션_쿠키);
+        }
+        return given
                 .get("/products/{id}", 상품_ID)
                 .then().log()
                 .all()

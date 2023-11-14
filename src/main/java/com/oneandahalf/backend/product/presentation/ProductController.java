@@ -1,5 +1,7 @@
 package com.oneandahalf.backend.product.presentation;
 
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
+
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.support.Auth;
 import com.oneandahalf.backend.member.presentation.support.OptionalAuth;
@@ -9,11 +11,16 @@ import com.oneandahalf.backend.product.query.ProductQueryService;
 import com.oneandahalf.backend.product.query.dao.ProductSearchResponseDao.ProductSearchCond;
 import com.oneandahalf.backend.product.query.response.ProductDetailResponse;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +60,21 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailResponse> findDetail(
             @OptionalAuth Long memberId,
-            @PathVariable("id") Long productId
+            @PathVariable("id") Long productId,
+            @CookieValue(name = "VIEW_SESSION", required = false) String viewSessionCookie,
+            HttpServletResponse response
     ) {
+        if (viewSessionCookie == null) {
+            productService.upViewCount(productId);
+            ResponseCookie cookie = ResponseCookie.from("VIEW_SESSION", UUID.randomUUID().toString())
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite(SameSite.NONE.attributeValue())
+                    .maxAge((long) 60 * 60 * 24)
+                    .path("/")
+                    .build();
+            response.addHeader(SET_COOKIE, cookie.toString());
+        }
         return ResponseEntity.ok(productQueryService.find(memberId, productId));
     }
 }

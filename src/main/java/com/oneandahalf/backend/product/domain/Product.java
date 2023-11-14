@@ -34,6 +34,8 @@ public class Product extends CommonDomainModel {
 
     private boolean traded;
 
+    private int viewCount;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_post_id", nullable = false, updatable = false)
     private List<ProductImageName> productImageNames = new ArrayList<>();
@@ -59,6 +61,10 @@ public class Product extends CommonDomainModel {
 
     public int getPrice() {
         return price.getValue();
+    }
+
+    public void upViewCount() {
+        this.viewCount++;
     }
 
     public List<String> getProductImageNames() {

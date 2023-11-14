@@ -22,4 +22,9 @@ public class ProductService {
         Product product = command.toDomain(seller);
         return productRepository.save(product).getId();
     }
+
+    public void upViewCount(Long productId) {
+        Product product = productRepository.getById(productId);
+        product.upViewCount();
+    }
 }

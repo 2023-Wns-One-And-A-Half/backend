@@ -139,6 +139,7 @@ public class ProductAcceptanceTest {
                             .description("말랑말랑 말랑이")
                             .interestedCount(1)
                             .price(10_000)
+                            .viewCount(1)
                             .traded(false)
                             .interested(false)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
@@ -149,6 +150,48 @@ public class ProductAcceptanceTest {
                                     .profileImageName("mallangImage")
                                     .build()
                             ).build());
+        }
+
+        @Test
+        void 중복_조회_시_조회수는_오르지_않는다() {
+            // given
+            var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
+            var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
+            String 상품_조회_세션 = 상품_상세_조회_요청(null, 상품_ID).cookie("VIEW_SESSION");
+
+            // when
+            var 응답 = 상품_상세_조회_요청(null, 상품_ID, 상품_조회_세션);
+
+            // then
+            assertThat(응답.as(ProductDetailResponse.class))
+                    .usingRecursiveComparison()
+                    .comparingOnlyFields("viewCount")
+                    .isEqualTo(ProductDetailResponse.builder()
+                            .viewCount(1)
+                            .build()
+                    );
+        }
+
+        @Test
+        void 새로운_세션이라면_조회수는_오른다() {
+            // given
+            var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
+            var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, 상품1_정보));
+            상품_상세_조회_요청(null, 상품_ID);
+
+            // when
+            var 응답 = 상품_상세_조회_요청(null, 상품_ID);
+
+            // then
+            assertThat(응답.as(ProductDetailResponse.class))
+                    .usingRecursiveComparison()
+                    .comparingOnlyFields("viewCount")
+                    .isEqualTo(ProductDetailResponse.builder()
+                            .viewCount(2)
+                            .build()
+                    );
         }
 
         @Test
@@ -172,6 +215,7 @@ public class ProductAcceptanceTest {
                             .interestedCount(1)
                             .price(10_000)
                             .traded(false)
+                            .viewCount(1)
                             .interested(true)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
@@ -213,6 +257,7 @@ public class ProductAcceptanceTest {
                             .interestedCount(0)
                             .price(10_000)
                             .interested(false)
+                            .viewCount(1)
                             .traded(true)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
