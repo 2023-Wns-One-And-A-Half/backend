@@ -32,6 +32,8 @@ public class Product extends CommonDomainModel {
     @JoinColumn(name = "seller_id")
     private Member seller;
 
+    private boolean traded;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_post_id", nullable = false, updatable = false)
     private List<ProductImageName> productImageNames = new ArrayList<>();
@@ -49,6 +51,10 @@ public class Product extends CommonDomainModel {
         this.productImageNames = productImageNames.stream()
                 .map(ProductImageName::new)
                 .toList();
+    }
+
+    public void confirmTrade() {
+        this.traded = true;
     }
 
     public int getPrice() {
