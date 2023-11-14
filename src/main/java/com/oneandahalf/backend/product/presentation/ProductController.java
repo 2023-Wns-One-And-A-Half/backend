@@ -2,6 +2,7 @@ package com.oneandahalf.backend.product.presentation;
 
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.support.Auth;
+import com.oneandahalf.backend.member.presentation.support.OptionalAuth;
 import com.oneandahalf.backend.product.application.ProductService;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
 import com.oneandahalf.backend.product.query.ProductQueryService;
@@ -51,8 +52,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailResponse> findDetail(
-            @PathVariable("id") Long id
+            @OptionalAuth Long memberId,
+            @PathVariable("id") Long productId
     ) {
-        return ResponseEntity.ok(productQueryService.find(id));
+        return ResponseEntity.ok(productQueryService.find(memberId, productId));
     }
 }

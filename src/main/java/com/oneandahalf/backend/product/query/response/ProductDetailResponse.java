@@ -17,6 +17,7 @@ public class ProductDetailResponse {
     private String description;
     private int price;
     private int interestedCount;
+    private boolean interested;
     private List<String> productImageNames;
     private SellerInfoResponse sellerInfo;
 
@@ -33,6 +34,10 @@ public class ProductDetailResponse {
 
     public void setInterestedCount(int interestedCount) {
         this.interestedCount = interestedCount;
+    }
+
+    public void setInterested(boolean interested) {
+        this.interested = interested;
     }
 
     @Builder

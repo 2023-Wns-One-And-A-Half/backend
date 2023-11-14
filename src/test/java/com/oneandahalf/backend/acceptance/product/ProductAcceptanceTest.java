@@ -125,7 +125,7 @@ public class ProductAcceptanceTest {
             관심_상품_등록_요청(세션, 상품_ID);
 
             // when
-            var 응답 = 상품_상세_조회_요청(상품_ID);
+            var 응답 = 상품_상세_조회_요청(null, 상품_ID);
 
             // then
             assertThat(응답.as(ProductDetailResponse.class))
@@ -136,6 +136,44 @@ public class ProductAcceptanceTest {
                             .description("말랑말랑 말랑이")
                             .interestedCount(1)
                             .price(10_000)
+                            .interested(false)
+                            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                            .sellerInfo(SellerInfoResponse.builder()
+                                    .id(회원_ID)
+                                    .nickname("mallang")
+                                    .activityArea(SEOUL)
+                                    .profileImageName("mallangImage")
+                                    .build()
+                            ).build());
+        }
+
+        @Test
+        void 로그인_후_요청_시_관심등록여부도_반환한다() {
+            // given
+            var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
+            var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+            RegisterProductRequest request1 = RegisterProductRequest.builder()
+                    .name("말랑이")
+                    .description("말랑말랑 말랑이")
+                    .price(10_000)
+                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                    .build();
+            var 상품_ID = ID를_추출한다(상품_등록_요청(세션, request1));
+            관심_상품_등록_요청(세션, 상품_ID);
+
+            // when
+            var 응답 = 상품_상세_조회_요청(세션, 상품_ID);
+
+            // then
+            assertThat(응답.as(ProductDetailResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(ProductDetailResponse.builder()
+                            .id(상품_ID)
+                            .name("말랑이")
+                            .description("말랑말랑 말랑이")
+                            .interestedCount(1)
+                            .price(10_000)
+                            .interested(true)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
                                     .id(회원_ID)
