@@ -1,7 +1,7 @@
 package com.oneandahalf.backend.member.domain;
 
-import static com.oneandahalf.backend.member.domain.MemberFixture.MALLANG_PASSWORD;
-import static com.oneandahalf.backend.member.domain.MemberFixture.mallang;
+import static com.oneandahalf.backend.member.MemberFixture.MALLANG_PASSWORD;
+import static com.oneandahalf.backend.member.MemberFixture.mallang;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.willThrow;
