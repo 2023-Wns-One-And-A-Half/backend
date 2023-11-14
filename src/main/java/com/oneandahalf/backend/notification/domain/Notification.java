@@ -24,10 +24,16 @@ public class Notification extends CommonDomainModel {
 
     private String linkedURI;
 
+    private boolean read;
+
     @Builder
     public Notification(Member member, String content, String linkedURI) {
         this.member = member;
         this.content = content;
         this.linkedURI = linkedURI;
+    }
+
+    public void read() {
+        this.read = true;
     }
 }

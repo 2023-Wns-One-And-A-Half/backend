@@ -53,6 +53,7 @@ public class Product extends CommonDomainModel {
         this.productImageNames = productImageNames.stream()
                 .map(ProductImageName::new)
                 .toList();
+        registerEvent(new RegisterProductEvent(this));
     }
 
     public void confirmTrade() {
