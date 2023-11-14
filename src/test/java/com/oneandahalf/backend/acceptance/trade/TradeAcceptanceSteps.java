@@ -17,4 +17,20 @@ public class TradeAcceptanceSteps {
                 .log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 내가_구매한_상품_조회_요청(String 세션) {
+        return given(세션)
+                .get("/trades/purchased")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 내가_판매한_상품_조회_요청(String 세션) {
+        return given(세션)
+                .get("/trades/sold")
+                .then()
+                .log().all()
+                .extract();
+    }
 }
