@@ -9,6 +9,7 @@ import static com.oneandahalf.backend.acceptance.AcceptanceSteps.인증되지_�
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.잘못된_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.회원가입_요청;
+import static com.oneandahalf.backend.acceptance.product.InterestProductAcceptanceSteps.관심_상품_등록_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_검색_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_등록_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_상세_조회_요청;
@@ -121,16 +122,19 @@ public class ProductAcceptanceTest {
                     .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                     .build();
             var 상품_ID = ID를_추출한다(상품_등록_요청(세션, request1));
+            관심_상품_등록_요청(세션, 상품_ID);
 
             // when
             var 응답 = 상품_상세_조회_요청(상품_ID);
 
             // then
             assertThat(응답.as(ProductDetailResponse.class))
+                    .usingRecursiveComparison()
                     .isEqualTo(ProductDetailResponse.builder()
                             .id(상품_ID)
                             .name("말랑이")
                             .description("말랑말랑 말랑이")
+                            .interestedCount(1)
                             .price(10_000)
                             .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
