@@ -1,7 +1,6 @@
 package com.oneandahalf.backend.acceptance.trade;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
-import static com.oneandahalf.backend.acceptance.AcceptanceSteps.given;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.예외_메세지를_검증한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.응답_상태를_검증한다;
@@ -20,8 +19,6 @@ import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
 import com.oneandahalf.backend.trade.query.response.TradeSuggestionStatusResponse;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

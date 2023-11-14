@@ -5,7 +5,6 @@ import static com.oneandahalf.backend.product.domain.QProduct.product;
 
 import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
