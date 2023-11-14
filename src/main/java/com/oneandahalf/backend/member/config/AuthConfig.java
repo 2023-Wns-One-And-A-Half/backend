@@ -29,9 +29,11 @@ public class AuthConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(optionalAuthInterceptor)
                 .addPathPatterns("/**")
+                .excludePathPatterns("/admin/**")
                 .order(0);
         registry.addInterceptor(setUpAuthInterceptor())
                 .addPathPatterns("/**")
+                .excludePathPatterns("/admin/**")
                 .order(1);
     }
 

@@ -10,10 +10,12 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.jdbc.Sql;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @ExtendWith(DataClearExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@Sql("/sql/adminInitialData.sql")
 public abstract class AcceptanceTest {
 
     @LocalServerPort
