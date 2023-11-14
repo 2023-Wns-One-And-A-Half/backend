@@ -13,7 +13,6 @@ import com.oneandahalf.backend.notification.domain.NotificationRepository;
 import com.oneandahalf.backend.product.domain.Product;
 import com.oneandahalf.backend.product.domain.RegisterProductEvent;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -42,27 +41,25 @@ class KeywordEventHandlerTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    void setUp() {
-        Member member = memberRepository.save(MemberFixture.mallang());
-        keywordRepository.save(new Keyword("청주", member));
-        keywordRepository.save(new Keyword("사과", member));
-        keywordRepository.save(new Keyword("주사", member));
-        keywordRepository.save(new Keyword("주 사", member));
-        keywordRepository.save(new Keyword("팔아요", member));
-        keywordRepository.save(new Keyword("맛있는", member));
-
-        keywordRepository.save(new Keyword("맛없는", member));
-        keywordRepository.save(new Keyword("건담", member));
-    }
-
     @Test
     void 상품_등록_이벤트를_받아_키워드가_해당_상품의_이름에_포함된_경우_알림을_생성한다() {
         // given
+        Member me = memberRepository.save(MemberFixture.mallang());
+        Member other = memberRepository.save(MemberFixture.member("other"));
+        keywordRepository.save(new Keyword("청주", me));
+        keywordRepository.save(new Keyword("사과", me));
+        keywordRepository.save(new Keyword("주사", me));
+        keywordRepository.save(new Keyword("주 사", me));
+        keywordRepository.save(new Keyword("팔아요", me));
+        keywordRepository.save(new Keyword("맛있는", me));
+
+        keywordRepository.save(new Keyword("맛없는", me));
+        keywordRepository.save(new Keyword("건담", me));
         Product product = Product.builder()
                 .price(1000)
                 .name("맛있는 청주 사과를 팔아요.")
                 .productImageNames(List.of())
+                .seller(other)
                 .build();
         ReflectionTestUtils.setField(product, "id", 100L);
 
@@ -83,5 +80,32 @@ class KeywordEventHandlerTest {
         assertThat(result)
                 .extracting(Notification::getLinkedURI)
                 .containsOnly("/products/100");
+    }
+
+    @Test
+    void 내가_등록한_상품은_내_키워드랑_일치하더라도_알림_생성_X() {
+        // given
+        Member me = memberRepository.save(MemberFixture.mallang());
+        Member other = memberRepository.save(MemberFixture.member("other"));
+        keywordRepository.save(new Keyword("사과", me));
+        keywordRepository.save(new Keyword("청주", other));
+        Product product = Product.builder()
+                .price(1000)
+                .name("맛있는 청주 사과를 팔아요.")
+                .productImageNames(List.of())
+                .seller(me)
+                .build();
+        ReflectionTestUtils.setField(product, "id", 100L);
+
+        // when
+        keywordEventHandler.notifyRegisteredProductContainsKeyword(new RegisterProductEvent(product));
+
+        // then
+        List<Notification> result = notificationRepository.findAll();
+        assertThat(result)
+                .extracting(Notification::getContent)
+                .containsExactlyInAnyOrder(
+                        "\"청주\" 키워드 관련 게시물이 올라왔어요."
+                );
     }
 }

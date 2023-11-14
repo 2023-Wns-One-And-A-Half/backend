@@ -26,9 +26,14 @@ public class KeywordEventHandler {
     public void notifyRegisteredProductContainsKeyword(RegisterProductEvent event) {
         List<Notification> notifications = keywordRepository.findAllByContainsContent(event.product().getName())
                 .stream()
+                .filter(it -> notMyProduct(event, it))
                 .map(it -> generateNotification(it, event.product().getId()))
                 .toList();
         notificationRepository.saveAll(notifications);
+    }
+
+    private boolean notMyProduct(RegisterProductEvent event, Keyword keyword) {
+        return !keyword.getMember().getId().equals(event.product().getSeller().getId());
     }
 
     private Notification generateNotification(Keyword keyword, Long productId) {
