@@ -5,6 +5,7 @@ import static com.oneandahalf.backend.product.domain.QProduct.product;
 
 import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -30,7 +31,8 @@ public class ProductSearchResponseDao {
                 .where(
                         activityAreaEq(cond.activityArea()),
                         priceContains(cond.minPrice(), cond.maxPrice()),
-                        nameContains(cond.name())
+                        nameContains(cond.name()),
+                        notTraded()
                 ).orderBy(product.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -44,7 +46,8 @@ public class ProductSearchResponseDao {
                 .where(
                         activityAreaEq(cond.activityArea()),
                         priceContains(cond.minPrice(), cond.maxPrice()),
-                        nameContains(cond.name())
+                        nameContains(cond.name()),
+                        notTraded()
                 );
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -74,6 +77,10 @@ public class ProductSearchResponseDao {
             return null;
         }
         return product.name.containsIgnoreCase(name);
+    }
+
+    private BooleanExpression notTraded() {
+        return product.traded.isFalse();
     }
 
     @Builder
