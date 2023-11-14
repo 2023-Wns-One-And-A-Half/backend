@@ -1,7 +1,7 @@
 package com.oneandahalf.backend.trade.query.dao;
 
 import com.oneandahalf.backend.trade.query.dao.support.TradeSuggestionQuerySupport;
-import com.oneandahalf.backend.trade.query.response.TradeSuggestionStatusResponse;
+import com.oneandahalf.backend.trade.query.response.TradeSuggestionExistResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +11,9 @@ public class TradeSuggestionStatusResponseDao {
 
     private final TradeSuggestionQuerySupport tradeSuggestionQuerySupport;
 
-    public TradeSuggestionStatusResponse find(Long suggesterId, Long productId) {
+    public TradeSuggestionExistResponse find(Long suggesterId, Long productId) {
         return tradeSuggestionQuerySupport.findBySuggesterIdAndProductId(suggesterId, productId)
-                .map(TradeSuggestionStatusResponse::from)
-                .orElseGet(() -> new TradeSuggestionStatusResponse(false, null));
+                .map(TradeSuggestionExistResponse::from)
+                .orElseGet(() -> new TradeSuggestionExistResponse(false, null));
     }
 }

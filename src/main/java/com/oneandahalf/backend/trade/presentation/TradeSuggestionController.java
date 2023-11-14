@@ -5,8 +5,10 @@ import com.oneandahalf.backend.member.presentation.support.Auth;
 import com.oneandahalf.backend.trade.application.TradeSuggestionService;
 import com.oneandahalf.backend.trade.presentation.request.SuggestTradeRequest;
 import com.oneandahalf.backend.trade.query.TradeSuggestionQueryService;
-import com.oneandahalf.backend.trade.query.response.TradeSuggestionStatusResponse;
+import com.oneandahalf.backend.trade.query.response.TradeSuggestionExistResponse;
+import com.oneandahalf.backend.trade.query.response.TradeSuggestionResponse;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,11 +35,19 @@ public class TradeSuggestionController {
         return ResponseEntity.created(URI.create("/trade-suggests/" + suggestId)).build();
     }
 
-    @GetMapping
-    public ResponseEntity<TradeSuggestionStatusResponse> findStatus(
+    @GetMapping("/exist")
+    public ResponseEntity<TradeSuggestionExistResponse> exist(
             @Auth Long memberId,
             @RequestParam("productId") Long productId
     ) {
-        return ResponseEntity.ok(tradeSuggestionQueryService.findStatus(memberId, productId));
+        return ResponseEntity.ok(tradeSuggestionQueryService.exist(memberId, productId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TradeSuggestionResponse>> findAllByProductId(
+            @Auth Long memberId,
+            @RequestParam("productId") Long productId
+    ) {
+        return ResponseEntity.ok(tradeSuggestionQueryService.findAllByProductId(memberId, productId));
     }
 }
