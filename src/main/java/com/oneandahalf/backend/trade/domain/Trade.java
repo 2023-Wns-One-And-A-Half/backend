@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,27 +15,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class TradeSuggestion extends CommonDomainModel {
+public class Trade extends CommonDomainModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "suggester_id")
-    private Member suggester;
+    @JoinColumn(name = "purchaser_id", nullable = false, updatable = false)
+    private Member purchaser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false, updatable = false, unique = true)
     private Product product;
 
-    public TradeSuggestion(Member suggester, Product product) {
-        this.suggester = suggester;
+    public Trade(Member purchaser, Product product) {
+        this.purchaser = purchaser;
         this.product = product;
-    }
-
-    public void suggest(TradeValidator tradeValidator) {
-        tradeValidator.validateSuggest(suggester, product);
-    }
-
-    public Trade confirm(Member seller, TradeValidator tradeValidator) {
-        tradeValidator.validateTradeConfirm(product, seller);
-        return new Trade(suggester, product);
     }
 }
