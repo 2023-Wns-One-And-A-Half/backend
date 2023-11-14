@@ -130,7 +130,7 @@ public class TradeSuggestionAcceptanceTest {
     }
 
     @Nested
-    class 거래_제안_상태_조회_API extends AcceptanceTest {
+    class 거래_제안_여부_조회_API extends AcceptanceTest {
 
         @Test
         void 거래_제안을_한_경우() {

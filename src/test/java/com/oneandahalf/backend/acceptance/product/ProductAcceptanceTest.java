@@ -120,7 +120,7 @@ public class ProductAcceptanceTest {
                 .build();
 
         @Test
-        void 상품을_상세정보를_조회한다() {
+        void 상품의_상세정보를_조회한다() {
             // given
             var 회원_ID = ID를_추출한다(회원가입_요청(회원가입_정보));
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
