@@ -12,7 +12,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
         );
     }
 
-    boolean existsByContent(String content);
-
     boolean existsByMemberAndContent(Member member, String content);
+
+    void deleteByIdAndMemberId(Long id, Long memberId);
 }
