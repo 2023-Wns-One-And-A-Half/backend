@@ -4,10 +4,12 @@ import static com.oneandahalf.backend.member.MemberFixture.MALLANG_PASSWORD;
 import static com.oneandahalf.backend.member.MemberFixture.mallang;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
 
 import com.oneandahalf.backend.member.exception.DuplicateUsernameException;
+import com.oneandahalf.backend.member.exception.ForbiddenBlacklistException;
 import com.oneandahalf.backend.member.exception.MissMatchPasswordException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -36,14 +38,17 @@ class MemberTest {
     }
 
     @Test
-    void 비밀번호가_일치하면_로그인_성공() {
+    void 블랙리스트라면_로그인_실패() {
         // given
         Member mallang = mallang();
+        willThrow(ForbiddenBlacklistException.class)
+                .given(memberValidator)
+                .validateBlackListLogin(any());
 
         // when & then
-        assertDoesNotThrow(() -> {
-            mallang.login(MALLANG_PASSWORD);
-        });
+        assertThatThrownBy(() -> {
+            mallang.login(MALLANG_PASSWORD, memberValidator);
+        }).isInstanceOf(ForbiddenBlacklistException.class);
     }
 
     @Test
@@ -53,7 +58,18 @@ class MemberTest {
 
         // when & then
         assertThatThrownBy(() -> {
-            mallang.login(MALLANG_PASSWORD + "wrong");
+            mallang.login(MALLANG_PASSWORD + "wrong", memberValidator);
         }).isInstanceOf(MissMatchPasswordException.class);
+    }
+
+    @Test
+    void 비밀번호가_일치하고_블랙리스트가_아니면_로그인_성공() {
+        // given
+        Member mallang = mallang();
+
+        // when & then
+        assertDoesNotThrow(() -> {
+            mallang.login(MALLANG_PASSWORD, memberValidator);
+        });
     }
 }
