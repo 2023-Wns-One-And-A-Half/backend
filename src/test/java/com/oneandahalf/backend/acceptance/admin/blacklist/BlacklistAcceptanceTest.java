@@ -7,6 +7,7 @@ import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.응답_상태를_검증한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.인증되지_않음;
 import static com.oneandahalf.backend.acceptance.admin.auth.AdminAuthAcceptanceSteps.어드민_로그인_요청;
+import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_목록_조회_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_제거_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_추가_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_요청;
@@ -23,6 +24,7 @@ import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.admin.auth.presentation.request.AdminLoginRequest;
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.query.response.BlacklistResponse;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
 import com.oneandahalf.backend.trade.query.response.TradeSuggestionResponse;
@@ -183,7 +185,46 @@ public class BlacklistAcceptanceTest {
     }
 
     @Nested
+    class 블랙리스트_목록_조회_API extends AcceptanceTest {
+
+        @Test
+        void 블랙리스트_목록_조회() {
+            // given
+            AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
+            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
+            var 동훈_ID = ID를_추출한다(회원가입_요청(동훈_회원가입_정보));
+            블랙리스트_추가_요청(어드민_세션, 말랑_ID);
+            블랙리스트_추가_요청(어드민_세션, 동훈_ID);
+
+            // when
+            var 응답 = 블랙리스트_목록_조회_요청(어드민_세션);
+
+            // then
+            List<BlacklistResponse> responses = 응답.as(new TypeRef<>() {
+            });
+            assertThat(responses).hasSize(2);
+        }
+
+        @Test
+        void 어드민만_가능하다() {
+            // given
+            AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
+            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
+            var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
+
+            // when
+            var 응답 = 블랙리스트_목록_조회_요청(말랑_세션);
+
+            // then
+            응답_상태를_검증한다(응답, 인증되지_않음);
+        }
+    }
+
+    @Nested
     class 블랙리스트의_점근_불가_테스트 extends AcceptanceTest {
+
 
         @Test
         void 블랙리스트는_상품_등록이_불가능하다() {
