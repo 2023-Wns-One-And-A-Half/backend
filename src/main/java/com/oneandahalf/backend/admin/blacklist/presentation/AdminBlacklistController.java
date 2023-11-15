@@ -6,7 +6,9 @@ import com.oneandahalf.backend.admin.blacklist.presentation.request.AddBlacklist
 import com.oneandahalf.backend.admin.blacklist.presentation.request.DeleteBlacklistRequest;
 import com.oneandahalf.backend.member.application.BlacklistService;
 import com.oneandahalf.backend.member.query.BlacklistQueryService;
+import com.oneandahalf.backend.member.query.MemberQueryService;
 import com.oneandahalf.backend.member.query.response.BlacklistResponse;
+import com.oneandahalf.backend.member.query.response.NotBlacklistMemberResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class AdminBlacklistController {
 
     private final BlacklistService blacklistService;
     private final BlacklistQueryService blacklistQueryService;
+    private final MemberQueryService memberQueryService;
+
 
     @PostMapping
     public ResponseEntity<Void> black(@RequestBody AddBlacklistRequest request) {
@@ -40,5 +44,10 @@ public class AdminBlacklistController {
     @GetMapping
     public ResponseEntity<List<BlacklistResponse>> findAll() {
         return ResponseEntity.ok(blacklistQueryService.findAll());
+    }
+
+    @GetMapping("/not")
+    public ResponseEntity<List<NotBlacklistMemberResponse>> findAllNotBlacklist() {
+        return ResponseEntity.ok(memberQueryService.findAllNotBlacklist());
     }
 }

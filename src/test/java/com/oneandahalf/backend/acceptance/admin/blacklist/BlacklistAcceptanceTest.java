@@ -10,6 +10,7 @@ import static com.oneandahalf.backend.acceptance.admin.auth.AdminAuthAcceptanceS
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_목록_조회_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_제거_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_추가_요청;
+import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트가_아닌_회원_목록_조회;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.회원가입_요청;
@@ -25,6 +26,7 @@ import com.oneandahalf.backend.admin.auth.presentation.request.AdminLoginRequest
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
 import com.oneandahalf.backend.member.query.response.BlacklistResponse;
+import com.oneandahalf.backend.member.query.response.NotBlacklistMemberResponse;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
 import com.oneandahalf.backend.trade.query.response.TradeSuggestionResponse;
@@ -225,7 +227,6 @@ public class BlacklistAcceptanceTest {
     @Nested
     class 블랙리스트의_점근_불가_테스트 extends AcceptanceTest {
 
-
         @Test
         void 블랙리스트는_상품_등록이_불가능하다() {
             // given
@@ -255,6 +256,30 @@ public class BlacklistAcceptanceTest {
 
             // then
             응답_상태를_검증한다(응답, 권한_없음);
+        }
+    }
+
+    @Nested
+    class 블랙리스트가_아닌_회원_목록_조회_API extends AcceptanceTest {
+
+        @Test
+        void 블랙리스트가_아닌_회원_목록을_조회한다() {
+            // given
+            AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
+            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
+            회원가입_요청(동훈_회원가입_정보);
+            블랙리스트_추가_요청(어드민_세션, 말랑_ID);
+
+            // when
+            var 응답 = 블랙리스트가_아닌_회원_목록_조회(어드민_세션);
+
+            // then
+            List<NotBlacklistMemberResponse> responses = 응답.as(new TypeRef<>() {
+            });
+            assertThat(responses)
+                    .extracting(NotBlacklistMemberResponse::nickname)
+                    .containsExactly("donghun");
         }
     }
 }

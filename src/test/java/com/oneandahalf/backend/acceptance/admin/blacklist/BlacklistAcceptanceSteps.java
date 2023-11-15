@@ -35,4 +35,12 @@ public class BlacklistAcceptanceSteps {
                 .log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 블랙리스트가_아닌_회원_목록_조회(String 어드민_세션) {
+        return given(어드민_세션)
+                .get("/admin/blacklists/not")
+                .then()
+                .log().all()
+                .extract();
+    }
 }
