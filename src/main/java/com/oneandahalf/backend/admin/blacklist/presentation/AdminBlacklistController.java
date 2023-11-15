@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/admin/blacklist")
+@RequestMapping("/admin/blacklists")
 @RestController
 public class AdminBlacklistController {
 

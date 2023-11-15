@@ -18,8 +18,9 @@ public class Blacklist extends CommonDomainModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    
+
     public Blacklist(Member member) {
         this.member = member;
+        registerEvent(new AddBlacklistEvent(member.getId()));
     }
 }

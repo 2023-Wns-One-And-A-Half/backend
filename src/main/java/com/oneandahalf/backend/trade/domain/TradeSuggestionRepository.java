@@ -14,4 +14,6 @@ public interface TradeSuggestionRepository extends JpaRepository<TradeSuggestion
     }
 
     boolean existsBySuggesterAndProduct(Member suggester, Product product);
+
+    void deleteAllBySuggesterId(Long suggesterId);
 }

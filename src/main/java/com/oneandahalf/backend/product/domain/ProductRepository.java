@@ -9,4 +9,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         return findById(id).orElseThrow(() ->
                 new NotFoundEntityException("id가 %d인 상품이 존재하지 않습니다.".formatted(id)));
     }
+
+    void deleteAllBySellerId(Long sellerId);
 }
