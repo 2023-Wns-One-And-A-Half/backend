@@ -9,6 +9,7 @@ import static com.oneandahalf.backend.acceptance.AcceptanceSteps.인증되지_�
 import static com.oneandahalf.backend.acceptance.admin.auth.AdminAuthAcceptanceSteps.어드민_로그인_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_제거_요청;
 import static com.oneandahalf.backend.acceptance.admin.blacklist.BlacklistAcceptanceSteps.블랙리스트_추가_요청;
+import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.회원가입_요청;
 import static com.oneandahalf.backend.acceptance.product.ProductAcceptanceSteps.상품_검색_요청;
@@ -195,6 +196,21 @@ public class BlacklistAcceptanceTest {
 
             // when
             var 응답 = 상품_등록_요청(말랑_세션, 상품1_요청);
+
+            // then
+            응답_상태를_검증한다(응답, 권한_없음);
+        }
+
+        @Test
+        void 블랙리스트는_로그인이_불가능하다() {
+            // given
+            AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
+            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
+            블랙리스트_추가_요청(어드민_세션, 말랑_ID);
+
+            // when
+            var 응답 = 로그인_요청("mallang1234", "mallang12345!@#");
 
             // then
             응답_상태를_검증한다(응답, 권한_없음);

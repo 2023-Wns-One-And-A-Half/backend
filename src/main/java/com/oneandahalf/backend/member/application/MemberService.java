@@ -26,7 +26,7 @@ public class MemberService {
 
     public Long login(LoginCommand command) {
         Member member = memberRepository.getByUsername(command.username());
-        member.login(command.password());
+        member.login(command.password(), memberValidator);
         return member.getId();
     }
 }

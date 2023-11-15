@@ -52,8 +52,9 @@ public class Member extends CommonDomainModel {
         validator.validateDuplicateUsername(username);
     }
 
-    public void login(String password) {
+    public void login(String password, MemberValidator validator) {
         if (getPassword().match(password)) {
+            validator.validateBlackListLogin(getId());
             return;
         }
         throw new MissMatchPasswordException();
