@@ -23,6 +23,7 @@ public class BlacklistService {
 
     public void unBlack(Long memberId) {
         Blacklist blackList = blacklistRepository.getByMemberId(memberId);
+        blackList.delete();
         blacklistRepository.delete(blackList);
     }
 }

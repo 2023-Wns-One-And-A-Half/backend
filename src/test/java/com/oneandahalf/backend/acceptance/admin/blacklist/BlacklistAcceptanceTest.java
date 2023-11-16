@@ -225,7 +225,7 @@ public class BlacklistAcceptanceTest {
     }
 
     @Nested
-    class 블랙리스트의_점근_불가_테스트 extends AcceptanceTest {
+    class 블랙리스트의_접근_불가_테스트 extends AcceptanceTest {
 
         @Test
         void 블랙리스트는_상품_등록이_불가능하다() {

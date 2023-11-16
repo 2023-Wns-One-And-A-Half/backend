@@ -21,6 +21,11 @@ public class Blacklist extends CommonDomainModel {
 
     public Blacklist(Member member) {
         this.member = member;
+        member.black();
         registerEvent(new AddBlacklistEvent(member.getId()));
+    }
+
+    public void delete() {
+        member.unBlack();
     }
 }

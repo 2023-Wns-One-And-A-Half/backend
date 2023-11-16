@@ -48,7 +48,8 @@ public class ProductDetailResponse {
             Long id,
             String nickname,
             String profileImageName,
-            ActivityArea activityArea
+            ActivityArea activityArea,
+            boolean black
     ) {
 
         public static SellerInfoResponse from(Member seller) {
@@ -57,6 +58,7 @@ public class ProductDetailResponse {
                     .nickname(seller.getNickname())
                     .profileImageName(seller.getProfileImageName())
                     .activityArea(seller.getActivityArea())
+                    .black(seller.isBlack())
                     .build();
         }
     }

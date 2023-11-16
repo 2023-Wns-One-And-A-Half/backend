@@ -169,7 +169,7 @@ public class TradeAcceptanceTest {
 
             // when
             var 응답 = 내가_판매한_상품_조회_요청(동훈_세션);
-            
+
             // then
             List<MyTradeProductResponse> responses = 응답.as(new TypeRef<>() {
             });
