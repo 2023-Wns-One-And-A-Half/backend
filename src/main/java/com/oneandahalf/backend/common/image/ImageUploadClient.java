@@ -2,14 +2,15 @@ package com.oneandahalf.backend.common.image;
 
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Str;
 
 public interface ImageUploadClient {
 
-    default void upload(List<MultipartFile> file) {
-        for (MultipartFile multipartFile : file) {
-            upload(multipartFile);
-        }
+    default List<String> upload(List<MultipartFile> file) {
+        return file.stream()
+                .map(this::upload)
+                .toList();
     }
 
-    void upload(MultipartFile file);
+    String upload(MultipartFile file);
 }

@@ -19,15 +19,17 @@ public class S3ImageUploadClient implements ImageUploadClient {
 
     @Override
     @SneakyThrows
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
+        String fileName = generateFileName();
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(awsS3Property.bucket())
-                .key(awsS3Property.key() + generateFileName())
+                .key(fileName)
                 .contentType(file.getContentType())
                 .contentDisposition("inline")
                 .build();
         RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
         s3Client.putObject(putObjectRequest, requestBody);
+        return fileName;
     }
 
     private String generateFileName() {
