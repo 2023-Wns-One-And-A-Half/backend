@@ -2,6 +2,7 @@ package com.oneandahalf.backend.member.presentation;
 
 import static com.oneandahalf.backend.member.presentation.support.AuthConstant.SESSION_ATTRIBUTE_MEMBER_ID;
 
+import com.oneandahalf.backend.common.image.ImageUploadClient;
 import com.oneandahalf.backend.member.application.MemberService;
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MemberController {
 
+    private final ImageUploadClient imageUploadClient;
     private final MemberService memberService;
     private final MemberQueryService memberQueryService;
 
@@ -32,7 +34,8 @@ public class MemberController {
     public ResponseEntity<Void> signup(
             @Valid @RequestBody SignupRequest request
     ) {
-        Long memberId = memberService.signup(request.toCommand());
+        String profileImageName = imageUploadClient.upload(request.profileImage());
+        Long memberId = memberService.signup(request.toCommand(profileImageName));
         return ResponseEntity
                 .created(URI.create("/members/" + memberId))
                 .build();
