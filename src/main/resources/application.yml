@@ -23,3 +23,8 @@ server:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: TRACE
+
+aws:
+  s3:
+    bucket:
+    key:
