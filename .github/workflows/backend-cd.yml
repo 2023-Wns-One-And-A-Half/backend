@@ -54,6 +54,7 @@ jobs:
       - name: ✨ Docker Image 빌드 후 DockerHub에 Push
         uses: docker/build-push-action@v4
         with:
+          context: .
           file: ./Dockerfile
           push: true
           platforms: linux/arm64
