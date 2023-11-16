@@ -18,7 +18,7 @@ server:
         max-age: 2592000
         http-only: true
         same-site: none
-        secure: true
+        secure: false
 
 logging:
   level:

@@ -136,7 +136,7 @@ public class MemberAcceptanceTest {
             Cookie cookie = 응답.detailedCookie("JSESSIONID");
             assertThat(cookie.getSameSite()).isEqualTo("None");
             assertThat(cookie.isHttpOnly()).isTrue();
-            assertThat(cookie.isSecured()).isTrue();
+            assertThat(cookie.isSecured()).isFalse();
         }
 
         @Test
