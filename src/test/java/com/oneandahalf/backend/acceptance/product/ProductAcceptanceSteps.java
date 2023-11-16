@@ -1,9 +1,12 @@
 package com.oneandahalf.backend.acceptance.product;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.given;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.멀티파트_이미지;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.oneandahalf.backend.member.domain.ActivityArea;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -12,8 +15,28 @@ import io.restassured.specification.RequestSpecification;
 public class ProductAcceptanceSteps {
 
     public static ExtractableResponse<Response> 상품_등록_요청(String 세션, RegisterProductRequest request) {
-        return given(세션)
-                .body(request)
+        var name = new MultiPartSpecBuilder(request.name())
+                .controlName("name")
+                .charset(UTF_8)
+                .build();
+        var description = new MultiPartSpecBuilder(request.description())
+                .controlName("description")
+                .charset(UTF_8)
+                .build();
+        var price = new MultiPartSpecBuilder(request.price())
+                .controlName("price")
+                .charset(UTF_8)
+                .build();
+        RequestSpecification requestSpecification = given(세션)
+                .multiPart(name)
+                .multiPart(description)
+                .multiPart(price);
+        request.productImages().forEach(it -> {
+            requestSpecification.multiPart(멀티파트_이미지(it, "productImages"));
+        });
+        return requestSpecification
+                .contentType("multipart/form-data")
+                .when()
                 .post("/products")
                 .then().log().all()
                 .extract();

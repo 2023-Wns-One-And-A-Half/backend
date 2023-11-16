@@ -2,6 +2,7 @@ package com.oneandahalf.backend.acceptance.keyword;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.given;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.본문_없음;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.예외_메세지를_검증한다;
@@ -37,7 +38,7 @@ public class KeywordAcceptanceTest {
             .password("mallang12345!@#")
             .nickname("mallang")
             .activityArea(SEOUL)
-            .profileImageName("mallangImage")
+            .profileImage(multipartFile("mallangImage"))
             .build();
 
     @Nested

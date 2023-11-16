@@ -43,7 +43,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> register(
             @Auth Long memberId,
-            @RequestBody RegisterProductRequest request
+            @ModelAttribute RegisterProductRequest request
     ) {
         List<String> productImageNames = imageUploadClient.upload(request.productImages());
         Long productId = productService.register(request.toCommand(memberId, productImageNames));

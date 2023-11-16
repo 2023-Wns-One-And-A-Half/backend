@@ -1,14 +1,20 @@
 package com.oneandahalf.backend.acceptance;
 
 import static io.restassured.http.ContentType.JSON;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.oneandahalf.backend.common.exception.ErrorCode;
 import io.restassured.RestAssured;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
+import java.io.IOException;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
 public final class AcceptanceSteps {
@@ -21,6 +27,24 @@ public final class AcceptanceSteps {
     public static final HttpStatus 권한_없음 = HttpStatus.FORBIDDEN;
     public static final HttpStatus 찾을수_없음 = HttpStatus.NOT_FOUND;
     public static final HttpStatus 중복됨 = HttpStatus.CONFLICT;
+
+    public static MultipartFile multipartFile(String name) {
+        return new MockMultipartFile(
+                name, name, "multipart/form-data", name.getBytes()
+        );
+    }
+
+    public static MultiPartSpecification 멀티파트_이미지(MultipartFile image, String name) {
+        try {
+            return new MultiPartSpecBuilder(image.getBytes())
+                    .controlName(name)
+                    .fileName(image.getName())
+                    .charset(UTF_8)
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static <T> T 없음() {
         return null;

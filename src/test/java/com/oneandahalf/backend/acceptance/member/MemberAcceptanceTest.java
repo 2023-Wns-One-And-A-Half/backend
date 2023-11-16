@@ -1,6 +1,7 @@
 package com.oneandahalf.backend.acceptance.member;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.값이_존재한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.예외_메세지를_검증한다;
@@ -43,7 +44,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
 
             // when
@@ -62,7 +63,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
             회원가입_요청(request);
 
@@ -82,7 +83,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
 
             // when
@@ -101,7 +102,7 @@ public class MemberAcceptanceTest {
                     .password("1234567")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
 
             // when
@@ -124,7 +125,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
             회원가입_요청(request);
 
@@ -146,7 +147,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
             회원가입_요청(request);
 
@@ -166,7 +167,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .activityArea(SEOUL)
                     .nickname("mallang")
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
             회원가입_요청(request);
 
@@ -199,7 +200,7 @@ public class MemberAcceptanceTest {
                     .password("mallang12345!@#")
                     .nickname("mallang")
                     .activityArea(SEOUL)
-                    .profileImageName("mallangImage")
+                    .profileImage(multipartFile("mallangImage"))
                     .build();
             var 회원_ID = ID를_추출한다(회원가입_요청(request));
             var 세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
@@ -213,10 +214,11 @@ public class MemberAcceptanceTest {
                     .id(회원_ID)
                     .nickname("mallang")
                     .activityArea(SEOUL)
-                    .profileImageName("mallangImage")
                     .build();
             MemberProfileResponse memberProfileResponse = 응답.as(MemberProfileResponse.class);
             assertThat(memberProfileResponse)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
                     .isEqualTo(예상);
         }
     }
