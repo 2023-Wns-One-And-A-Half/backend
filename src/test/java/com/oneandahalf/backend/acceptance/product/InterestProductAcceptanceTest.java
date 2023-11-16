@@ -1,6 +1,7 @@
 package com.oneandahalf.backend.acceptance.product;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.본문_없음;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.응답_상태를_검증한다;
@@ -38,21 +39,21 @@ public class InterestProductAcceptanceTest {
             .password("mallang12345!@#")
             .nickname("mallang")
             .activityArea(SEOUL)
-            .profileImageName("mallangImage")
+            .profileImage(multipartFile("mallangImage"))
             .build();
 
     private final RegisterProductRequest 상품1_정보 = RegisterProductRequest.builder()
             .name("말랑이")
             .description("말랑말랑 말랑이")
             .price(10_000)
-            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+            .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
             .build();
 
     private final RegisterProductRequest 상품2_정보 = RegisterProductRequest.builder()
             .name("몰랑이")
             .description("몰랑몰랑 몰랑이")
             .price(20_000)
-            .productImageNames(List.of("몰랑이_사진1"))
+            .productImages(List.of(multipartFile("몰랑이_사진1")))
             .build();
 
     @Nested

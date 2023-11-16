@@ -1,6 +1,7 @@
 package com.oneandahalf.backend.acceptance.admin.blacklist;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.권한_없음;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.본문_없음;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
@@ -48,7 +49,7 @@ public class BlacklistAcceptanceTest {
             .password("mallang12345!@#")
             .nickname("mallang")
             .activityArea(SEOUL)
-            .profileImageName("mallangImage")
+            .profileImage(multipartFile("mallangImage"))
             .build();
 
     private final SignupRequest 동훈_회원가입_정보 = SignupRequest.builder()
@@ -56,21 +57,21 @@ public class BlacklistAcceptanceTest {
             .password("donghun12345!@#")
             .nickname("donghun")
             .activityArea(SEOUL)
-            .profileImageName("donghunImage")
+            .profileImage(multipartFile("donghunImage"))
             .build();
 
     private final RegisterProductRequest 상품1_요청 = RegisterProductRequest.builder()
             .name("말랑이")
             .description("말랑말랑 말랑이")
             .price(10_000)
-            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+            .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
             .build();
 
     private final RegisterProductRequest 상품2_요청 = RegisterProductRequest.builder()
             .name("몰랑이")
             .description("몰랑몰랑 몰랑이")
             .price(20_000)
-            .productImageNames(List.of("몰랑이_사진1"))
+            .productImages(List.of(multipartFile("몰랑이_사진1")))
             .build();
 
     @Nested

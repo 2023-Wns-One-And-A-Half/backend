@@ -2,6 +2,7 @@ package com.oneandahalf.backend.product.presentation;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
+import com.oneandahalf.backend.common.image.ImageUploadClient;
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.support.Auth;
 import com.oneandahalf.backend.member.presentation.support.OptionalAuth;
@@ -13,6 +14,7 @@ import com.oneandahalf.backend.product.query.response.ProductDetailResponse;
 import com.oneandahalf.backend.product.query.response.ProductSearchResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.server.Cookie.SameSite;
@@ -34,15 +36,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController {
 
+    private final ImageUploadClient imageUploadClient;
     private final ProductService productService;
     private final ProductQueryService productQueryService;
 
     @PostMapping
     public ResponseEntity<Void> register(
             @Auth Long memberId,
-            @RequestBody RegisterProductRequest request
+            @ModelAttribute RegisterProductRequest request
     ) {
-        Long productId = productService.register(request.toCommand(memberId));
+        List<String> productImageNames = imageUploadClient.upload(request.productImages());
+        Long productId = productService.register(request.toCommand(memberId, productImageNames));
         return ResponseEntity
                 .created(URI.create("/products/" + productId))
                 .build();

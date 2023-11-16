@@ -1,6 +1,7 @@
 package com.oneandahalf.backend.acceptance.product;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.값이_존재한다;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.생성됨;
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.예외_메세지를_검증한다;
@@ -44,7 +45,7 @@ public class ProductAcceptanceTest {
             .password("mallang12345!@#")
             .nickname("mallang")
             .activityArea(SEOUL)
-            .profileImageName("mallangImage")
+            .profileImage(multipartFile("mallangImage"))
             .build();
 
     @Nested
@@ -59,7 +60,7 @@ public class ProductAcceptanceTest {
                     .name("말랑이")
                     .description("말랑말랑 말랑이")
                     .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                    .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
                     .build();
 
             // when
@@ -78,7 +79,7 @@ public class ProductAcceptanceTest {
                     .name("말랑이")
                     .description("말랑말랑 말랑이")
                     .price(10_000)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                    .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
                     .build();
 
             // when
@@ -97,7 +98,7 @@ public class ProductAcceptanceTest {
                     .name("말랑이")
                     .description("말랑말랑 말랑이")
                     .price(-1)
-                    .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                    .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
                     .build();
 
             // when
@@ -116,7 +117,7 @@ public class ProductAcceptanceTest {
                 .name("말랑이")
                 .description("말랑말랑 말랑이")
                 .price(10_000)
-                .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
                 .build();
 
         @Test
@@ -133,6 +134,7 @@ public class ProductAcceptanceTest {
             // then
             assertThat(응답.as(ProductDetailResponse.class))
                     .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
                     .isEqualTo(ProductDetailResponse.builder()
                             .id(상품_ID)
                             .name("말랑이")
@@ -142,12 +144,10 @@ public class ProductAcceptanceTest {
                             .viewCount(1)
                             .traded(false)
                             .interested(false)
-                            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
                                     .id(회원_ID)
                                     .nickname("mallang")
                                     .activityArea(SEOUL)
-                                    .profileImageName("mallangImage")
                                     .build()
                             ).build());
         }
@@ -208,6 +208,7 @@ public class ProductAcceptanceTest {
             // then
             assertThat(응답.as(ProductDetailResponse.class))
                     .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
                     .isEqualTo(ProductDetailResponse.builder()
                             .id(상품_ID)
                             .name("말랑이")
@@ -217,12 +218,10 @@ public class ProductAcceptanceTest {
                             .traded(false)
                             .viewCount(1)
                             .interested(true)
-                            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
                                     .id(회원_ID)
                                     .nickname("mallang")
                                     .activityArea(SEOUL)
-                                    .profileImageName("mallangImage")
                                     .build()
                             ).build());
         }
@@ -236,7 +235,7 @@ public class ProductAcceptanceTest {
                     .password("donghun12345!@#")
                     .nickname("donghun")
                     .activityArea(SEOUL)
-                    .profileImageName("donghunImage")
+                    .profileImage(multipartFile("donghunImage"))
                     .build()));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
             var 동훈_세션 = 로그인_후_세션_추출("donghun1234", "donghun12345!@#");
@@ -250,6 +249,7 @@ public class ProductAcceptanceTest {
             // then
             assertThat(응답.as(ProductDetailResponse.class))
                     .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
                     .isEqualTo(ProductDetailResponse.builder()
                             .id(상품_ID)
                             .name("말랑이")
@@ -259,12 +259,10 @@ public class ProductAcceptanceTest {
                             .interested(false)
                             .viewCount(1)
                             .traded(true)
-                            .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
                             .sellerInfo(SellerInfoResponse.builder()
                                     .id(동훈_ID)
                                     .nickname("donghun")
                                     .activityArea(SEOUL)
-                                    .profileImageName("donghunImage")
                                     .build()
                             ).build());
         }
@@ -277,13 +275,13 @@ public class ProductAcceptanceTest {
                 .name("말랑이")
                 .description("말랑말랑 말랑이")
                 .price(10_000)
-                .productImageNames(List.of("말랑이_사진1", "말랑이_사진2"))
+                .productImages(List.of(multipartFile("말랑이_사진1"), multipartFile("말랑이_사진2")))
                 .build();
         private final RegisterProductRequest 상품2_정보 = RegisterProductRequest.builder()
                 .name("몰랑이")
                 .description("말랑말랑 말랑이")
                 .price(20_000)
-                .productImageNames(List.of("몰랑이_사진1", "몰랑이_사진2"))
+                .productImages(List.of(multipartFile("몰랑이_사진1"), multipartFile("몰랑이_사진2")))
                 .build();
 
         @Test

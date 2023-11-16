@@ -1,18 +1,48 @@
 package com.oneandahalf.backend.acceptance.member;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.given;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.멀티파트_이미지;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.MultiPartSpecification;
+import io.restassured.specification.RequestSpecification;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberAcceptanceSteps {
 
     public static ExtractableResponse<Response> 회원가입_요청(SignupRequest request) {
-        return given()
-                .body(request)
+        var username = new MultiPartSpecBuilder(request.username())
+                .controlName("username")
+                .charset(UTF_8)
+                .build();
+        var password = new MultiPartSpecBuilder(request.password())
+                .controlName("password")
+                .charset(UTF_8)
+                .build();
+        var activityArea = new MultiPartSpecBuilder(request.activityArea())
+                .controlName("activityArea")
+                .charset(UTF_8)
+                .build();
+        var nickname = new MultiPartSpecBuilder(request.nickname())
+                .controlName("nickname")
+                .charset(UTF_8)
+                .build();
+        RequestSpecification requestSpecification = given()
+                .multiPart(username)
+                .multiPart(password)
+                .multiPart(activityArea)
+                .multiPart(nickname)
+                .multiPart(멀티파트_이미지(request.profileImage(), "profileImage"));
+        return requestSpecification
+                .contentType("multipart/form-data")
+                .when()
                 .post("/members")
                 .then().log().all()
                 .extract();

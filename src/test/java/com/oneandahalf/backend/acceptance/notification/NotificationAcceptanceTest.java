@@ -1,6 +1,7 @@
 package com.oneandahalf.backend.acceptance.notification;
 
 import static com.oneandahalf.backend.acceptance.AcceptanceSteps.ID를_추출한다;
+import static com.oneandahalf.backend.acceptance.AcceptanceSteps.multipartFile;
 import static com.oneandahalf.backend.acceptance.keyword.KeywordAcceptanceSteps.키워드_작성_요청;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.로그인_후_세션_추출;
 import static com.oneandahalf.backend.acceptance.member.MemberAcceptanceSteps.회원가입_요청;
@@ -32,7 +33,7 @@ public class NotificationAcceptanceTest {
             .password("mallang12345!@#")
             .nickname("mallang")
             .activityArea(SEOUL)
-            .profileImageName("mallangImage")
+            .profileImage(multipartFile("mallangImage"))
             .build();
 
     private final SignupRequest 동훈_회원가입_정보 = SignupRequest.builder()
@@ -40,7 +41,7 @@ public class NotificationAcceptanceTest {
             .password("donghun12345!@#")
             .nickname("donghun")
             .activityArea(SEOUL)
-            .profileImageName("donghunImage")
+            .profileImage(multipartFile("donghunImage"))
             .build();
 
     @Nested
@@ -59,7 +60,7 @@ public class NotificationAcceptanceTest {
                     .name("맛있는 사과입니다.")
                     .description("하하")
                     .price(1000)
-                    .productImageNames(List.of("사진"))
+                    .productImages(List.of(multipartFile("사진")))
                     .build()));
 
             // when
@@ -96,7 +97,7 @@ public class NotificationAcceptanceTest {
                     .name("맛있는 사과입니다.")
                     .description("하하")
                     .price(1000)
-                    .productImageNames(List.of("사진"))
+                    .productImages(List.of(multipartFile("사진")))
                     .build()));
             var 내_알림_조회_응답 = 내_알림_목록_조회_요청(말랑_세션);
             var 알림_ID = 내_알림_조회_응답.as(MyNotificationsResponse.class)
