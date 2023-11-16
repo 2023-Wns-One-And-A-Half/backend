@@ -22,6 +22,7 @@ public record ChatMessageResponse(
                 .content(chatMessage.getContent())
                 .senderInfo(MemberInfo.from(chatMessage.getSender()))
                 .receiverInfo(MemberInfo.from(chatMessage.getReceiver()))
+                .read(chatMessage.isRead())
                 .createdDate(chatMessage.getCreatedDate())
                 .build();
     }

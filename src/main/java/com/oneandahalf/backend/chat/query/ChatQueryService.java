@@ -25,7 +25,7 @@ public class ChatQueryService {
     @Transactional
     public ChatRoomResponse findChatRoom(Long memberId, Long chatRoomId) {
         ProductChatRoom room = chatRoomRepository.getById(chatRoomId);
-        if (room.isParticipant(memberId)) {
+        if (!room.isParticipant(memberId)) {
             throw new ApplicationException(new ErrorCode(FORBIDDEN, "채팅을 조회할 권한이 없습니다"));
         }
         return ChatRoomResponse.from(room, chatMessageDao.findAllByChatRoom(memberId, chatRoomId));
