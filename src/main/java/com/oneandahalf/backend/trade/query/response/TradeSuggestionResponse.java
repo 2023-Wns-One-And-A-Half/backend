@@ -26,7 +26,8 @@ public record TradeSuggestionResponse(
             Long suggesterId,
             String nickName,
             String profileImageName,
-            ActivityArea activityArea
+            ActivityArea activityArea,
+            boolean black
     ) {
         public static TradeSuggesterInfo from(Member suggester) {
             return TradeSuggesterInfo.builder()
@@ -34,6 +35,7 @@ public record TradeSuggestionResponse(
                     .nickName(suggester.getNickname())
                     .profileImageName(suggester.getProfileImageName())
                     .activityArea(suggester.getActivityArea())
+                    .black(suggester.isBlack())
                     .build();
         }
     }

@@ -36,6 +36,13 @@ public class ProductChatRoom extends CommonDomainModel {
         this.roomName = "[%s] 에 대한 채팅".formatted(product.getName());
         this.seller = product.getSeller();
         this.client = client;
+        validateBlacklist();
+    }
+
+    private void validateBlacklist() {
+        if (seller.isBlack() || client.isBlack()) {
+            throw new ApplicationException(new ErrorCode(BAD_REQUEST, "채팅 대상 중 블랙리스트가 존재하여 채팅을 할 수 없습니다."));
+        }
     }
 
     public void open(Long memberId) {

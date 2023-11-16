@@ -1,7 +1,11 @@
 package com.oneandahalf.backend.chat.domain;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 import com.oneandahalf.backend.chat.exception.BadChatException;
 import com.oneandahalf.backend.common.domain.CommonDomainModel;
+import com.oneandahalf.backend.common.exception.ApplicationException;
+import com.oneandahalf.backend.common.exception.ErrorCode;
 import com.oneandahalf.backend.member.domain.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -52,6 +56,9 @@ public class ChatMessage extends CommonDomainModel {
         }
         if (!chatRoom.isParticipant(sender.getId())) {
             throw new BadChatException("메세지 발싡자가 채팅에 참여된 사람이 아닙니다.");
+        }
+        if (receiver.isBlack() || sender.isBlack()) {
+            throw new ApplicationException(new ErrorCode(BAD_REQUEST, "채팅 대상 중 블랙리스트가 존재하여 채팅을 할 수 없습니다."));
         }
     }
 

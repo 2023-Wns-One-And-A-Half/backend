@@ -32,7 +32,8 @@ public record ChatMessageResponse(
             Long id,
             String nickname,
             String profileImageName,
-            ActivityArea activityArea
+            ActivityArea activityArea,
+            boolean black
     ) {
         public static MemberInfo from(Member member) {
             return MemberInfo.builder()
@@ -40,6 +41,7 @@ public record ChatMessageResponse(
                     .nickname(member.getNickname())
                     .profileImageName(member.getProfileImageName())
                     .activityArea(member.getActivityArea())
+                    .black(member.isBlack())
                     .build();
         }
     }

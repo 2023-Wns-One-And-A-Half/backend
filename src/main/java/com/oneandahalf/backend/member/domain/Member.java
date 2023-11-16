@@ -33,6 +33,8 @@ public class Member extends CommonDomainModel {
     @Column(nullable = true)
     private String profileImageName;
 
+    private boolean black;
+
     @Builder
     public Member(
             String username,
@@ -58,5 +60,13 @@ public class Member extends CommonDomainModel {
             return;
         }
         throw new MissMatchPasswordException();
+    }
+
+    public void black() {
+        this.black = true;
+    }
+
+    public void unBlack() {
+        this.black = false;
     }
 }

@@ -9,7 +9,8 @@ public record MemberProfileResponse(
         Long id,
         String nickname,
         String profileImageName,
-        ActivityArea activityArea
+        ActivityArea activityArea,
+        boolean black
 ) {
 
     public static MemberProfileResponse from(Member member) {
@@ -18,6 +19,7 @@ public record MemberProfileResponse(
                 .nickname(member.getNickname())
                 .profileImageName(member.getProfileImageName())
                 .activityArea(member.getActivityArea())
+                .black(member.isBlack())
                 .build();
     }
 }
