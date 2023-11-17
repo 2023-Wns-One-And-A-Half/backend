@@ -26,6 +26,7 @@ import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.admin.auth.presentation.request.AdminLoginRequest;
 import com.oneandahalf.backend.common.page.PageResponse;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import com.oneandahalf.backend.member.query.response.BlacklistResponse;
 import com.oneandahalf.backend.member.query.response.NotBlacklistMemberResponse;
 import com.oneandahalf.backend.product.presentation.request.RegisterProductRequest;
@@ -81,7 +82,7 @@ public class BlacklistAcceptanceTest {
         void 회원을_블랙리스트에_추가한다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
 
             // when
@@ -95,7 +96,7 @@ public class BlacklistAcceptanceTest {
         void 어드민이_아니라면_요청할_수_없다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
 
@@ -110,7 +111,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트에_추가된_회원의_게시글은_모두_삭제된다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
             상품_등록_요청(말랑_세션, 상품1_요청);
@@ -130,7 +131,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트에_추가되면_제아한_거래_요청이_모두_제거된다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             회원가입_요청(말랑_회원가입_정보);
             회원가입_요청(동훈_회원가입_정보);
@@ -158,7 +159,7 @@ public class BlacklistAcceptanceTest {
         void 회원을_블랙리스트에서_제거한다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             블랙리스트_추가_요청(어드민_세션, 말랑_ID);
 
@@ -173,7 +174,7 @@ public class BlacklistAcceptanceTest {
         void 어드민이_아니라면_요청할_수_없다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
 
@@ -194,7 +195,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트_목록_조회() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 동훈_ID = ID를_추출한다(회원가입_요청(동훈_회원가입_정보));
             블랙리스트_추가_요청(어드민_세션, 말랑_ID);
@@ -213,7 +214,7 @@ public class BlacklistAcceptanceTest {
         void 어드민만_가능하다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
 
@@ -232,7 +233,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트는_상품_등록이_불가능하다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
             블랙리스트_추가_요청(어드민_세션, 말랑_ID);
@@ -248,7 +249,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트는_로그인이_불가능하다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             블랙리스트_추가_요청(어드민_세션, 말랑_ID);
 
@@ -267,7 +268,7 @@ public class BlacklistAcceptanceTest {
         void 블랙리스트가_아닌_회원_목록을_조회한다() {
             // given
             AdminLoginRequest request = new AdminLoginRequest("admin", "admin");
-            var 어드민_세션 = 어드민_로그인_요청(request).cookie("JSESSIONID");
+            var 어드민_세션 = 어드민_로그인_요청(request).as(LoginResponse.class).jsessionid();
             var 말랑_ID = ID를_추출한다(회원가입_요청(말랑_회원가입_정보));
             회원가입_요청(동훈_회원가입_정보);
             블랙리스트_추가_요청(어드민_세션, 말랑_ID);

@@ -101,6 +101,7 @@ public class TradeSuggestionAcceptanceTest {
         @Test
         void 자신의_상품에_거래_제안을_하는_경우_예외() {
             // given
+            회원가입_요청(말랑_회원가입_정보);
             회원가입_요청(동훈_회원가입_정보);
             var 말랑_세션 = 로그인_후_세션_추출("mallang1234", "mallang12345!@#");
             var 동훈_세션 = 로그인_후_세션_추출("donghun1234", "donghun12345!@#");

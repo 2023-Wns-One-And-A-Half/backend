@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.admin.auth.presentation.request.AdminLoginRequest;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import io.restassured.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -34,10 +35,8 @@ public class AdminAuthAcceptanceTest {
             var 응답 = 어드민_로그인_요청(request);
 
             // then
-            Cookie cookie = 응답.detailedCookie("JSESSIONID");
-            assertThat(cookie.getSameSite()).isEqualTo("None");
-            assertThat(cookie.isHttpOnly()).isTrue();
-            assertThat(cookie.isSecured()).isFalse();
+            LoginResponse loginResponse = 응답.as(LoginResponse.class);
+            assertThat(loginResponse.jsessionid()).isNotNull();
         }
 
         @Test

@@ -1,11 +1,11 @@
 package com.oneandahalf.backend.admin.auth.presentation.support;
 
-import static com.oneandahalf.backend.admin.auth.presentation.support.AdminAuthConstant.SESSION_ATTRIBUTE_ADMIN_ID;
-
+import com.oneandahalf.backend.common.session.Session;
+import com.oneandahalf.backend.common.session.Session.SessionType;
+import com.oneandahalf.backend.common.session.SessionService;
 import com.oneandahalf.backend.member.exception.NoAuthenticationSessionException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,13 +14,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
+    private final SessionService sessionService;
     private final AdminAuthContext adminAuthContext;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Optional.ofNullable(request.getSession(false))
-                .map(it -> it.getAttribute(SESSION_ATTRIBUTE_ADMIN_ID))
-                .map(id -> (Long) id)
+        sessionService.getSession(request.getHeader("JSESSIONID"))
+                .filter(it -> it.getType() == SessionType.ADMIN)
+                .map(Session::getMemberId)
                 .ifPresent(adminAuthContext::setAdminId);
         if (adminAuthContext.unAuthenticated()) {
             throw new NoAuthenticationSessionException();

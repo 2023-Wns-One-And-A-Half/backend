@@ -1,8 +1,9 @@
 package com.oneandahalf.backend.member.presentation;
 
-import static com.oneandahalf.backend.member.presentation.support.AuthConstant.SESSION_ATTRIBUTE_MEMBER_ID;
+import static com.oneandahalf.backend.common.session.Session.SessionType.MEMBER;
 
 import com.oneandahalf.backend.common.image.ImageUploadClient;
+import com.oneandahalf.backend.common.session.SessionService;
 import com.oneandahalf.backend.member.application.MemberService;
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
@@ -10,8 +11,6 @@ import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import com.oneandahalf.backend.member.presentation.support.Auth;
 import com.oneandahalf.backend.member.query.MemberQueryService;
 import com.oneandahalf.backend.member.query.response.MemberProfileResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MemberController {
 
+    private final SessionService sessionService;
     private final ImageUploadClient imageUploadClient;
     private final MemberService memberService;
     private final MemberQueryService memberQueryService;
@@ -45,13 +45,11 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
-            @RequestBody LoginRequest loginRequest,
-            HttpServletRequest request
+            @RequestBody LoginRequest loginRequest
     ) {
         Long memberId = memberService.login(loginRequest.toCommand());
-        HttpSession session = request.getSession(true);
-        session.setAttribute(SESSION_ATTRIBUTE_MEMBER_ID, memberId);
-        return ResponseEntity.ok(new LoginResponse(session.getId()));
+        String sessionId = sessionService.save(memberId, MEMBER);
+        return ResponseEntity.ok(new LoginResponse(sessionId));
     }
 
     @GetMapping("/my")

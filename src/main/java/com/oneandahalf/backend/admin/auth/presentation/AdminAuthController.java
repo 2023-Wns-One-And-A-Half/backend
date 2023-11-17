@@ -1,11 +1,12 @@
 package com.oneandahalf.backend.admin.auth.presentation;
 
-import static com.oneandahalf.backend.admin.auth.presentation.support.AdminAuthConstant.SESSION_ATTRIBUTE_ADMIN_ID;
+import static com.oneandahalf.backend.common.session.Session.SessionType.ADMIN;
 
 import com.oneandahalf.backend.admin.auth.application.AdminAuthService;
 import com.oneandahalf.backend.admin.auth.presentation.request.AdminLoginRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.oneandahalf.backend.common.session.Session.SessionType;
+import com.oneandahalf.backend.common.session.SessionService;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,16 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AdminAuthController {
 
+    private final SessionService sessionService;
     private final AdminAuthService adminAuthService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
-            @RequestBody AdminLoginRequest loginRequest,
-            HttpServletRequest request
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody AdminLoginRequest loginRequest
     ) {
         Long adminId = adminAuthService.login(loginRequest.username(), loginRequest.password());
-        HttpSession session = request.getSession(true);
-        session.setAttribute(SESSION_ATTRIBUTE_ADMIN_ID, adminId);
-        return ResponseEntity.ok().build();
+        String sessionId = sessionService.save(adminId, ADMIN);
+        return ResponseEntity.ok(new LoginResponse(sessionId));
     }
 }

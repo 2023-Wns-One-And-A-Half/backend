@@ -6,6 +6,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -50,7 +51,8 @@ public class MemberAcceptanceSteps {
 
     public static String 로그인_후_세션_추출(String 아이디, String 비밀번호) {
         return 로그인_요청(아이디, 비밀번호)
-                .cookie("JSESSIONID");
+                .as(LoginResponse.class)
+                .jsessionid();
     }
 
     public static ExtractableResponse<Response> 로그인_요청(String 아이디, String 비밀번호) {

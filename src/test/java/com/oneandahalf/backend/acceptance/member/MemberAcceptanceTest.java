@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.oneandahalf.backend.acceptance.AcceptanceTest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import com.oneandahalf.backend.member.query.response.MemberProfileResponse;
 import io.restassured.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -133,10 +134,8 @@ public class MemberAcceptanceTest {
             var 응답 = 로그인_요청("mallang1234", "mallang12345!@#");
 
             // then
-            Cookie cookie = 응답.detailedCookie("JSESSIONID");
-            assertThat(cookie.getSameSite()).isEqualTo("None");
-            assertThat(cookie.isHttpOnly()).isTrue();
-            assertThat(cookie.isSecured()).isFalse();
+            LoginResponse loginResponse = 응답.as(LoginResponse.class);
+            assertThat(loginResponse.jsessionid()).isNotNull();
         }
 
         @Test

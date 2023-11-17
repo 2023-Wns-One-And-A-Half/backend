@@ -55,9 +55,14 @@ public final class AcceptanceSteps {
     }
 
     public static RequestSpecification given(String 세션) {
+        if (세션 == null) {
+            return RestAssured
+                    .given().log().all()
+                    .contentType(JSON);
+        }
         return RestAssured
                 .given().log().all()
-                .cookie("JSESSIONID", 세션)
+                .header("JSESSIONID", 세션)
                 .contentType(JSON);
     }
 
