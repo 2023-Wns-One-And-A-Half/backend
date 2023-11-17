@@ -6,6 +6,7 @@ import com.oneandahalf.backend.common.image.ImageUploadClient;
 import com.oneandahalf.backend.member.application.MemberService;
 import com.oneandahalf.backend.member.presentation.request.LoginRequest;
 import com.oneandahalf.backend.member.presentation.request.SignupRequest;
+import com.oneandahalf.backend.member.presentation.response.LoginResponse;
 import com.oneandahalf.backend.member.presentation.support.Auth;
 import com.oneandahalf.backend.member.query.MemberQueryService;
 import com.oneandahalf.backend.member.query.response.MemberProfileResponse;
@@ -43,14 +44,14 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest loginRequest,
             HttpServletRequest request
     ) {
         Long memberId = memberService.login(loginRequest.toCommand());
         HttpSession session = request.getSession(true);
         session.setAttribute(SESSION_ATTRIBUTE_MEMBER_ID, memberId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new LoginResponse(session.getId()));
     }
 
     @GetMapping("/my")
