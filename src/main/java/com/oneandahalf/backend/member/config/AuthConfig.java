@@ -33,7 +33,7 @@ public class AuthConfig implements WebMvcConfigurer {
                 .order(0);
         registry.addInterceptor(setUpAuthInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/admin/**")
+                .excludePathPatterns("/admin/**", "/error")
                 .order(1);
     }
 
