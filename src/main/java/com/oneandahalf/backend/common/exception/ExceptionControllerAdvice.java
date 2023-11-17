@@ -4,6 +4,7 @@ package com.oneandahalf.backend.common.exception;
 import static com.oneandahalf.backend.common.exception.ErrorCode.INTERNAL_SERVER_ERROR_CODE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,27 +19,27 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorCode> handleException(ApplicationException e) {
+    public ResponseEntity<ErrorCode> handleException(ApplicationException e, HttpServletRequest request) {
         ErrorCode errorCode = e.getErrorCode();
-        log.info("잘못될 요청이 들어왔습니다. ", e);
+        log.info("잘못될 요청이 들어왔습니다.[URI: {}]", request.getRequestURI(), e);
         return ResponseEntity.status(errorCode.status())
                 .body(errorCode);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorCode> handleException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorCode> handleException(MethodArgumentNotValidException e, HttpServletRequest request) {
         BindingResult result = e.getBindingResult();
         String fieldErrors = result.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(","));
-        log.info("요청 파라미터가 잘못되었습니다. {}", fieldErrors);
+        log.info("요청 파라미터가 잘못되었습니다.[URI: {}],  {}", request.getRequestURI(), fieldErrors);
         return ResponseEntity.badRequest()
                 .body(new ErrorCode(BAD_REQUEST, fieldErrors));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorCode> handleException(Exception e) {
-        log.error("예상치 못한 예외가 발생했습니다.  ", e);
+    public ResponseEntity<ErrorCode> handleException(Exception e, HttpServletRequest request) {
+        log.error("예상치 못한 예외가 발생했습니다.[URI: {}]",request.getRequestURI(),  e);
         return ResponseEntity.internalServerError()
                 .body(INTERNAL_SERVER_ERROR_CODE);
     }
