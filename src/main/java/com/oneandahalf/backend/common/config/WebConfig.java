@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // HTTPS 를 사용하지 않으므로 편의를 위해 *로 설정
+                .allowedOrigins("http://localhost:3000")
                 .allowedHeaders("*")
                 .allowedMethods(
                         OPTIONS.name(),
@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
                         DELETE.name(),
                         PATCH.name()
                 )
+                .allowCredentials(true)
                 .exposedHeaders("*");
     }
 }
