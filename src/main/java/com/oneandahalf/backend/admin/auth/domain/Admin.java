@@ -15,6 +15,11 @@ public class Admin extends CommonDomainModel {
     private String username;
     private String password;
 
+    public Admin(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public void login(String password) {
         if (this.password.equals(password)) {
             return;
