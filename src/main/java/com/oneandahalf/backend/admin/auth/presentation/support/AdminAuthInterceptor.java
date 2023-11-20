@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @RequiredArgsConstructor
@@ -19,6 +20,9 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (CorsUtils.isPreFlightRequest(request)) {
+            return true;
+        }
         sessionService.getSession(request.getHeader("JSESSIONID"))
                 .filter(it -> it.getType() == SessionType.ADMIN)
                 .map(Session::getMemberId)
