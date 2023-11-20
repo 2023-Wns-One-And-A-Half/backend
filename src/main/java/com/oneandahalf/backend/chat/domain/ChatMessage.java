@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-
 public class ChatMessage extends CommonDomainModel {
 
     private String content;
