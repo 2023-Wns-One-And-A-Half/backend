@@ -18,6 +18,12 @@ public class NotBlacklistMemberResponseDao {
         List<Long> blacklistMemberIds = blacklistQuerySupport.findAll().stream()
                 .map(it -> it.getMember().getId())
                 .toList();
+        if (blacklistMemberIds.isEmpty()) {
+            return memberQuerySupport.findAll()
+                    .stream()
+                    .map(NotBlacklistMemberResponse::from)
+                    .toList();
+        }
         return memberQuerySupport.findAllByIdNotIn(blacklistMemberIds)
                 .stream()
                 .map(NotBlacklistMemberResponse::from)
