@@ -7,6 +7,7 @@ import com.oneandahalf.backend.common.domain.CommonDomainModel;
 import com.oneandahalf.backend.common.exception.ApplicationException;
 import com.oneandahalf.backend.common.exception.ErrorCode;
 import com.oneandahalf.backend.member.domain.Member;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -35,6 +36,7 @@ public class ChatMessage extends CommonDomainModel {
     @JoinColumn(name = "recevier_id")
     private Member receiver;
 
+    @Column(name = "is_read")
     private boolean read;
 
     @Builder
